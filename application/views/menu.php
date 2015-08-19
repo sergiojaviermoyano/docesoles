@@ -49,10 +49,17 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> Usuarios</a></li>
-                <li><a href="../tables/data.html"><i class="fa fa-circle-o"></i> Grupos</a></li>
+                <li><a href="#" onClick="cargarView('group','index')"><i class="fa fa-circle-o"></i> Grupos</a></li>
               </ul>
             </li> 
           </ul>
         </section>
         <!-- /.sidebar -->
       </aside>
+
+      <script>
+      function cargarView(controller, action)
+      {
+        alert(controller + ' / ' + action);
+      }
+      </script>

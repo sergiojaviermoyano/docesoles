@@ -35,13 +35,13 @@
   
   //A este script despùes llevarlo a un archivo js
   $('#login').click(function(){
-    	WaitingOpen('Validando datos de acceso');
+    	WaitingOpen('Validando datos');
       $.ajax({
           type: 'POST',
           data: null,
     			url: 'index.php/login/sessionStart', 
     			success: function(result){
-                window.location.href = 'dash';
+                //window.location.href = 'dash';
                 if(result == 0){
                   //Error
                 }else{

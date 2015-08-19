@@ -47,43 +47,44 @@
   </head>
 
 
+<!-- indicador de carga -->
+  <div class="waiting" id="waiting">
+      <div style="top: 45%; left: 45%; position: inherit;">
+          <!--<div class="progress progress active">
+            <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+          </div>-->
 
-<!-- Waiting -->
-<div class="waiting-modal modal" id="waiting">
-  <div class="modal modal-default">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Modal Info</h4>
-        </div> -->
-        <div class="modal-body" style="text-align: center">
-          <br>
-          <h4 id="waitingText"></h4>
-          <div class="progress progress active">
-            <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-            </div>
-          </div>
-        </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-outline">Save changes</button>
-        </div> -->
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-</div><!-- /.example-modal -->
+          <div class="box box-success" style="width: 200px; text-align: center;">
+                <br>
+                <br>
+                <br>
+                <div class="box-header">
+                  <h3 class="box-title" id="waitingText">Cargando...</h3>
+                </div>
+                <!-- Loading (remove the following to stop the loading)-->
+                <div class="overlay">
+                  <i class="fa fa-refresh fa-spin"></i>
+                </div>
+                <!-- end loading -->
+              </div>
+      </div>
+  </div>
 
 <style>
-  .waiting-modal .modal {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
+  .waiting
+  {
+    background-color: black;
     display: block;
-    z-index: 100000;
-    margin: 0px auto ;
-    background: transparent !important;
+    position: absolute;
+    z-index: 50000;
+    overflow: auto;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: none;
   }
 </style>
