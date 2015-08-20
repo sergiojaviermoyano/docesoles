@@ -22,6 +22,7 @@
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/skins/_all-skins.min.css">
 
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/square/green.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -32,7 +33,7 @@
     <script src="<?php  echo base_url();?>assets/plugin/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.4 -->
     <script src="<?php  echo base_url();?>assets/js/bootstrap.min.js"></script>
-    <!-- iCheck -->
+    <!-- iCheck -->    
     <script src="<?php  echo base_url();?>assets/plugin/iCheck/icheck.min.js"></script>
     <!-- funciones comunes al sistema -->
     <script src="<?php  echo base_url();?>assets/js/propios.js"></script>
@@ -43,6 +44,15 @@
     <script src="<?php  echo base_url();?>assets/js/app.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="<?php  echo base_url();?>assets/js/demo.js"></script>
+
+    <script src="<?php  echo base_url();?>assets/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?php  echo base_url();?>assets/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="<?php  echo base_url();?>assets/plugin/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="<?php  echo base_url();?>assets/plugin/fastclick/fastclick.min.js"></script>
+
+
 
   </head>
 

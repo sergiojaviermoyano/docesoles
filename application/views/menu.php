@@ -60,6 +60,10 @@
       <script>
       function cargarView(controller, action)
       {
-        alert(controller + ' / ' + action);
+        //alert(controller + ' / ' + action);
+        WaitingOpen();
+        $('#content').empty();
+        $("#content").load("<?php echo base_url(); ?>index.php/"+controller+"/"+action+"");
+        WaitingClose();
       }
       </script>

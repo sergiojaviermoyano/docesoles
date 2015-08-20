@@ -41,7 +41,8 @@
           data: null,
     			url: 'index.php/login/sessionStart', 
     			success: function(result){
-                //window.location.href = 'dash';
+                WaitingClose();
+                window.location.href = 'dash';
                 if(result == 0){
                   //Error
                 }else{
