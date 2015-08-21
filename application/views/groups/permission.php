@@ -11,12 +11,12 @@
       <label style="margin-top: 7px;">Nombre: </label>
     </div>
 	<div class="col-xs-5">
-      <input type="text" class="form-control" placeholder="Nombre" id="grpName">
+      <input type="text" class="form-control" placeholder="Nombre" id="grpName" value="<?php echo $data['name'];?>">
     </div>
 </div>
 <hr>
 <?php
-	foreach ($list as $it) {
+	foreach ($data['list'] as $it) {
 		?>
 		<div id="permission">
 		<a role="button" data-toggle="collapse" href="#collapse<?php echo $it->menuName;?>" aria-expanded="false" aria-controls="collapse<?php echo $it->menuName;?>" class="modal-title"><?php echo str_replace("_", " ", $it->menuName);?></a>
@@ -33,9 +33,11 @@
 		  					<div>
 		  					<?php
 			  					foreach ($c->actions as $a) {
-			    			//var_dump($a);
-			    						echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;">'.$a['actDescription'].'<br>';
-			    				}
+			    						if($a['grpactId'] == null)
+						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;">'.$a['actDescription'].'<br>';
+						    			else
+						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" checked>'.$a['actDescription'].'<br>';
+							    				}
 		    				?>
 		  					</div>
 		  				</div>
@@ -45,8 +47,10 @@
 		    	else
 		    	{
 		    		foreach ($it->actions as $a) {
-		    			//var_dump($a);
-		    			echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;">'.$a['actDescription'].'<br>';
+		    			if($a['grpactId'] == null)
+		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;">'.$a['actDescription'].'<br>';
+		    			else
+		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;" checked>'.$a['actDescription'].'<br>';
 		    		}
 		    	}
 		    ?>

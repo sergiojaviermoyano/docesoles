@@ -16,7 +16,7 @@ class group extends CI_Controller {
 	}
 
 	public function getMenu(){
-		$data['list'] = $this->Groups->getMenu($this->input->post());
+		$data['data'] = $this->Groups->getMenu($this->input->post());
 		$response['html'] = $this->load->view('groups/permission', $data, true);
 
 		echo json_encode($response);

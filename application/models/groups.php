@@ -30,7 +30,18 @@ class Groups extends CI_Model
 		}
 		else
 		{
+			$action = $data['act'];
+			$idGrp = $data['id'];
+
+			if($idGrp == 0){
+				$name = "";
+			} else {
+				$name = "nombre";
+			}
 			$menu = array();
+			$menu['name'] = $name;
+			$menu['list'] = array();
+
 			$query= $this->db->get_where('sismenu',array('menuFather'=>null));
 			if ($query->num_rows() != 0)
 			{
@@ -46,6 +57,7 @@ class Groups extends CI_Model
 							$this->db->select('*');
 							$this->db->from('sismenuactions');
 							$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
+							$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');
 							$this->db->where(array('menuId'=>$son->menuId));
 
 							$queryActions= $this->db->get();
@@ -53,7 +65,7 @@ class Groups extends CI_Model
 							$son->childrens = array();
 						}
 						$items->actions = array();
-						$menu[] = $items;
+						$menu['list'][] = $items;
 					}
 					else
 					{
@@ -62,11 +74,12 @@ class Groups extends CI_Model
 						$this->db->select('*');
 						$this->db->from('sismenuactions');
 						$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
+						$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');
 						$this->db->where(array('menuId'=>$items->menuId));
 
 						$queryActions= $this->db->get();
 						$items->actions = $queryActions->result_array();
-						$menu[] = $items;
+						$menu['list'][] = $items;
 					}
 
 				}
