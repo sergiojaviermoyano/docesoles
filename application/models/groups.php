@@ -36,9 +36,20 @@ class Groups extends CI_Model
 			if($idGrp == 0){
 				$name = "";
 			} else {
-				$name = "nombre";
+				$query= $this->db->get_where('sisgroups',array('grpId'=>$idGrp));
+				if ($query->num_rows() != 0) {				
+					$name = $query->row('grpName');
+				} else {
+					$name = "";
+				}
+			}
+
+			$readonly = false;
+			if($action == 'Del' || $action == 'View'){
+				$readonly = true;
 			}
 			$menu = array();
+			$menu['read'] = $readonly;
 			$menu['name'] = $name;
 			$menu['list'] = array();
 
@@ -54,7 +65,7 @@ class Groups extends CI_Model
 						//Añadir los hijos
 						$items->childrens = $querySon->result();
 						foreach ($items->childrens as $son) {
-							$this->db->select('*');
+							$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
 							$this->db->from('sismenuactions');
 							$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
 							$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');
@@ -71,7 +82,7 @@ class Groups extends CI_Model
 					{
 						//Buscar las acciones
 						$items->childrens = array();
-						$this->db->select('*');
+						$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
 						$this->db->from('sismenuactions');
 						$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
 						$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');
@@ -106,15 +117,15 @@ class Groups extends CI_Model
 					   'grpName' => $name
 					);
 
-			$id = 0;
-			if($this->db->insert('sisgroups', $data) == false) {
-				return false;
-			}else{
-				$id = $this->db->insert_id();
-			}
-
 			switch($act){
 				case 'Add':
+					//Agregar grupo 
+					if($this->db->insert('sisgroups', $data) == false) {
+						return false;
+					}else{
+						$id = $this->db->insert_id();
+					}
+
 					//Agregar a sisgroupsactions
 					foreach ($options as $o) {
 						$data = array(
@@ -125,6 +136,42 @@ class Groups extends CI_Model
 							return false;
 						}
 					}
+					break;
+
+				case 'Edit':
+					//Actualizar nombre
+					if($this->db->update('sisgroups', $data, array('grpId'=>$id)) == false) {
+						return false;
+					}
+
+					//Eliminar en sisgroupsactions
+					if($this->db->delete('sisgroupsactions', array('grpId' => $id)) == false) {
+						return false;
+					}
+
+					//Agregar a sisgroupsactions
+					foreach ($options as $o) {
+						$data = array(
+						   'grpId' => $id,
+						   'menuAccId' => $o
+						);
+						if($this->db->insert('sisgroupsactions', $data) == false) {
+							return false;
+						}
+					}	
+					break;
+
+				case 'Del':
+					//Eliminar en sisgroupsactions
+					if($this->db->delete('sisgroupsactions', array('grpId' => $id)) == false) {
+						return false;
+					}
+
+					//Eliminar nombre
+					if($this->db->delete('sisgroups', $data, array('grpId'=>$id)) == false) {
+						return false;
+					}
+					
 					break;
 			}
 

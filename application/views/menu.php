@@ -48,7 +48,7 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> Usuarios</a></li>
+                <li><a href="#" onClick="cargarView('user','index')"><i class="fa fa-circle-o"></i> Usuarios</a></li>
                 <li><a href="#" onClick="cargarView('group','index')"><i class="fa fa-circle-o"></i> Grupos</a></li>
               </ul>
             </li> 

@@ -11,7 +11,7 @@
       <label style="margin-top: 7px;">Nombre: </label>
     </div>
 	<div class="col-xs-5">
-      <input type="text" class="form-control" placeholder="Nombre" id="grpName" value="<?php echo $data['name'];?>">
+      <input type="text" class="form-control" placeholder="Nombre" id="grpName" value="<?php echo $data['name'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
     </div>
 </div>
 <hr>
@@ -34,9 +34,9 @@
 		  					<?php
 			  					foreach ($c->actions as $a) {
 			    						if($a['grpactId'] == null)
-						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;">'.$a['actDescription'].'<br>';
+						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'<br>';
 						    			else
-						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" checked>'.$a['actDescription'].'<br>';
+						    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 10%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$a['actDescription'].'<br>';
 							    				}
 		    				?>
 		  					</div>
@@ -48,9 +48,9 @@
 		    	{
 		    		foreach ($it->actions as $a) {
 		    			if($a['grpactId'] == null)
-		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;">'.$a['actDescription'].'<br>';
+		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$a['actDescription'].'<br>';
 		    			else
-		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;" checked>'.$a['actDescription'].'<br>';
+		    				echo '<input type="checkbox" id="'.$a['menuAccId'].'" style="margin-left: 5%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$a['actDescription'].'<br>';
 		    		}
 		    	}
 		    ?>
@@ -60,8 +60,3 @@
 		<?php
 	}
 ?>
-
-<script>
-        
-
-</script>

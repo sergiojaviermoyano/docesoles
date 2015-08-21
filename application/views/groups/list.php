@@ -49,7 +49,12 @@
     });
   });
 
+  var idGrupo = 0;
+  var acGrupo = '';
+
   function LoadGrp(id_, action){
+  	idGrupo = id_;
+  	acGrupo = action;
   	LoadIconAction('modalAction',action);
   	WaitingOpen('Cargando menu');
       $.ajax({
@@ -71,11 +76,16 @@
 
   $('#btnSave').click(function(){
   	
+  	if(acGrupo == 'View')
+  	{
+  		$('#modalGrp').modal('hide');
+  		return;
+  	}
+
   	var hayError = true;
   	var permission = [];
   	$('#permission :checked').each(function() {
         hayError = false;
-        //alert($(this).attr('id'));
         permission.push($(this).attr('id'));
     });
 
@@ -89,12 +99,11 @@
     	return;
     }
 
-
     $('#errorGrp').fadeOut('slow');
     WaitingOpen('Guardando cambios');
     	$.ajax({
           	type: 'POST',
-          	data: { id : 0, act: 'Add', name: $('#grpName').val(), options: permission },
+          	data: { id : idGrupo, act: acGrupo, name: $('#grpName').val(), options: permission },
     		url: 'index.php/group/setMenu', 
     		success: function(result){
                 			WaitingClose();
