@@ -28,7 +28,7 @@
                   }
                   else
                   {
-                    echo '<li>
+                    echo '<li class="treeview">
                             <a href="#" onClick="cargarView(\''.$m['menuController'].'\',\''.$m['menuView'].'\')">
                               <i class="'.$m['menuIcon'].'"></i> <span>'.str_replace("_", " ", $m['menuName']).'</span>
                             </a>

@@ -10,10 +10,57 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-08-24 15:36:37
+Date: 2015-08-24 18:22:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for admcustomers
+-- ----------------------------
+DROP TABLE IF EXISTS `admcustomers`;
+CREATE TABLE `admcustomers` (
+  `cliId` int(11) NOT NULL AUTO_INCREMENT,
+  `cliName` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliLastName` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliDni` varchar(8) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliDateOfBirth` date DEFAULT NULL,
+  `cliNroCustomer` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliAddress` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliPhone` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliMovil` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliEmail` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliImagePath` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `zonaId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cliId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- ----------------------------
+-- Records of admcustomers
+-- ----------------------------
+INSERT INTO `admcustomers` VALUES ('1', 'Sergio', 'Moyano', '31324200', '0000-00-00', '1', 'Justo castro 2', '0264 - 4', '0264 - 1', 'sergio.m', '', '1');
+INSERT INTO `admcustomers` VALUES ('3', 'Miguel', 'Pereyra', '31324207', '1988-12-13', '2', 'Justo castro 4', '0264 - 15555', '', '', '', '6');
+
+-- ----------------------------
+-- Table structure for confzone
+-- ----------------------------
+DROP TABLE IF EXISTS `confzone`;
+CREATE TABLE `confzone` (
+  `zonaId` int(11) NOT NULL AUTO_INCREMENT,
+  `zonaName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`zonaId`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- ----------------------------
+-- Records of confzone
+-- ----------------------------
+INSERT INTO `confzone` VALUES ('1', 'Justo Castro 2');
+INSERT INTO `confzone` VALUES ('2', 'Villa Independencia');
+INSERT INTO `confzone` VALUES ('3', 'Los Medanos');
+INSERT INTO `confzone` VALUES ('4', 'Felipe Cobas');
+INSERT INTO `confzone` VALUES ('5', 'Los Olivos');
+INSERT INTO `confzone` VALUES ('6', 'Justo Castro 4');
+INSERT INTO `confzone` VALUES ('7', 'Area 2');
 
 -- ----------------------------
 -- Table structure for sisactions
@@ -119,7 +166,7 @@ CREATE TABLE `sismenu` (
 -- ----------------------------
 -- Records of sismenu
 -- ----------------------------
-INSERT INTO `sismenu` VALUES ('1', 'Clientes', 'fa fa-users', 'client', 'list', null);
+INSERT INTO `sismenu` VALUES ('1', 'Clientes', 'fa fa-users', 'customer', 'index', null);
 INSERT INTO `sismenu` VALUES ('2', 'Artículos', 'fa fa-leanpub', 'article', 'list', null);
 INSERT INTO `sismenu` VALUES ('3', 'Stock', 'fa fa-home', 'stock', 'list', null);
 INSERT INTO `sismenu` VALUES ('4', 'Cuenta_Corriente', 'fa fa-money', 'cash', 'list', null);
