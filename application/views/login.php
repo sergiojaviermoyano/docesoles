@@ -6,12 +6,20 @@
       <div class="login-box-body">
         <p class="login-box-msg">Ingreso</p>
         <div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="alert alert-danger alert-dismissable" id="errorLgn" style="display: none">
+                  <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                  Revise los datos de acceso ingresados
+              </div>
+            </div>
+          </div>
           <div class="form-group has-feedback">
-            <input type="email" class="form-control" placeholder="Usuario">
+            <input type="email" class="form-control" placeholder="Usuario" id="usrName">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
-            <input type="password" class="form-control" placeholder="Contraseña">
+            <input type="password" class="form-control" placeholder="Contraseña" id="usrPassword">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="row">
@@ -35,23 +43,42 @@
   
   //A este script despùes llevarlo a un archivo js
   $('#login').click(function(){
+      var hayError = false;
+      if($('#usrName').val() == '')
+      {
+        hayError = true;
+      }
+
+      if($('#usrPassword').val() == ''){
+        hayError = true;
+      }
+
+      if(hayError == true){
+        $('#errorLgn').fadeIn('slow');
+        return;
+      }
+
+      $('#errorLgn').fadeOut('hide');
+
     	WaitingOpen('Validando datos');
       $.ajax({
           type: 'POST',
-          data: null,
-    			url: 'index.php/login/sessionStart', 
+          data: { 
+                  usr: $('#usrName').val(),
+                  pas: $('#usrPassword').val()
+                },
+    			url: 'index.php/login/sessionStart_', 
     			success: function(result){
                 WaitingClose();
-                window.location.href = 'dash';
                 if(result == 0){
-                  //Error
+                  $('#errorLgn').fadeIn('slow');
                 }else{
-                  //OK, pero deberìa redireccionar desde el controller
+                  window.location.href = 'dash';
                 }
     					},
     			error: function(result){
-            debugger;
-    					alert("error");
+    					WaitingClose();
+              $('#errorLgn').fadeIn('slow');
     					},
           dataType: 'json'
     		});

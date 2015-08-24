@@ -148,6 +148,33 @@ class Users extends CI_Model
 
 		}
 	}
+
+	function sessionStart_($data = null){
+		if($data == null)
+		{
+			return false;
+		}
+		else
+		{
+			$usr = $data['usr'];
+			$pas = md5($data['pas']);
+
+			$data = array(
+					'usrNick' => $usr,
+					'usrPassword' => $pas
+				);
+
+			$query= $this->db->get_where('sisusers',$data);
+			if ($query->num_rows() != 0)
+			{
+				$this->session->set_userdata('user_data', $query->result_array());
+				return true;
+			} else {
+				return false;
+			}
+
+		}
+	}
 	
 }
 ?>

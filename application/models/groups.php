@@ -179,5 +179,68 @@ class Groups extends CI_Model
 
 		}
 	}
+
+	function buildMenu(){
+		$userdata = $this->session->userdata('user_data');
+		$grpId = $userdata[0]['grpId'];
+
+
+		$this->db->select('sismenu.*');
+		$this->db->from('sisgroups');
+		$this->db->join('sisgroupsactions', 'sisgroupsactions.grpId = sisgroups.grpId');
+		$this->db->join('sismenuactions', 'sismenuactions.menuAccId = sisgroupsactions.menuAccId');
+		$this->db->join('sismenu', 'sismenu.menuId = sismenuactions.menuId');
+		$this->db->where('sisgroups.grpId', $grpId);
+		$this->db->group_by('sismenu.menuName');
+		$this->db->order_by("sismenu.menuId", "asc");
+		$this->db->order_by("sismenu.menuFather", "asc");
+		$query = $this->db->get();
+		
+		$menu = $query->result_array();
+
+		$main_menu = array();
+		$father = 0;
+		foreach ($menu as $m) {
+			if($m['menuFather'] != null){
+				if($father != $m['menuFather']) { 
+					$father = $m['menuFather'];
+					$son = $m;
+					$item = $this->db->get_where('sismenu',array('menuId'=>$m['menuFather']));
+					$m = $item->result_array();
+					$m['actions'] = array();
+					foreach($menu as $s) {
+						if($s['menuFather'] == $father) {
+							$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
+							$this->db->from('sismenuactions');
+							$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
+							$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$grpId.'', 'left');
+							$this->db->where(array('menuId'=>$s['menuId']));
+
+							$queryActions= $this->db->get();
+							$s['actions'] = $queryActions->result_array();
+
+							$m['childrens'][] =	$s;
+						}
+					}
+
+					$main_menu[] = $m;					
+				}
+			} else {
+				$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
+				$this->db->from('sismenuactions');
+				$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
+				$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$grpId.'', 'left');
+				$this->db->where(array('menuId'=>$m['menuId']));
+
+				$queryActions= $this->db->get();
+				$m['actions'] = $queryActions->result_array();	
+				$m['childrens'] = array();
+
+				$main_menu[] = $m;
+			}		
+		}
+		
+		return $main_menu;
+	}
 }
 ?>
