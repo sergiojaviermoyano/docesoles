@@ -38,10 +38,11 @@ class Customers extends CI_Model
 			$query= $this->db->get_where('admcustomers',array('cliId'=>$idCust));
 			if ($query->num_rows() != 0)
 			{
-				$u = $query->result_array();
-				$u[0]['cliDateOfBirth'] = explode('-', $u[0]['cliDateOfBirth']);
-				$u[0]['cliDateOfBirth'] = $u[0]['cliDateOfBirth'][2].'-'.$u[0]['cliDateOfBirth'][1].'-'.$u[0]['cliDateOfBirth'][0];
-				$data['customer'] = $u[0];
+				$c = $query->result_array();
+				$c[0]['cliDateOfBirth'] = explode('-', $c[0]['cliDateOfBirth']);
+				$c[0]['cliDateOfBirth'] = $c[0]['cliDateOfBirth'][2].'-'.$c[0]['cliDateOfBirth'][1].'-'.$c[0]['cliDateOfBirth'][0];
+				$c[0]['cliImagePath'] = ( $c[0]['cliImagePath'] != '' ? 'assets/img/customers/'.$c[0]['cliImagePath'] : '');
+				$data['customer'] = $c[0];
 			} else {
 				$cust = array();
 				
@@ -62,6 +63,7 @@ class Customers extends CI_Model
 				$cust['cliEmail'] = '';
 				$cust['cliImagePath'] = '';
 				$cust['zonaId'] = '';
+				$cust['cliImagePath'] = '';
 
 				$data['customer'] = $cust;
 			}
@@ -104,6 +106,9 @@ class Customers extends CI_Model
 			$tel = $data['tel'];
 			$movil = $data['movil'];
 			$zona = $data['zona'];
+			$img = $data['img'];
+			$update = $data['update'];
+
 
 			$data = array(
 				   'cliDni' => $dni,
@@ -116,7 +121,8 @@ class Customers extends CI_Model
 				   'cliMovil' => $movil,
 				   'cliEmail' => $mail,
 				   'cliImagePath' => '',
-				   'zonaId' => $zona
+				   'zonaId' => $zona,
+				   'cliImagePath' => ($update == 0 ? '' : $id.'.png')
 				);
 
 			switch($act){
@@ -125,6 +131,20 @@ class Customers extends CI_Model
 					if($this->db->insert('admcustomers', $data) == false) {
 						return false;
 					}else{
+						$id = $this->db->insert_id();
+
+						$img = str_replace('data:image/png;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+						file_put_contents('assets/img/customers/'.$id.'.png', $data);
+
+						$data = array(
+								'cliImagePath' => $id.'.png'
+							);
+						if($this->db->update('admcustomers', $data, array('cliId'=>$id)) == false) {
+				 		return false;
+				 		}
+
 						return true;
 					}
 					break;
@@ -134,6 +154,11 @@ class Customers extends CI_Model
 				 	if($this->db->update('admcustomers', $data, array('cliId'=>$id)) == false) {
 				 		return false;
 				 	}
+
+				 	$img = str_replace('data:image/png;base64,', '', $img);
+					$img = str_replace(' ', '+', $img);
+					$data = base64_decode($img);
+					file_put_contents('assets/img/customers/'.$id.'.png', $data);
 				 	break;
 
 				 case 'Del':
@@ -143,7 +168,6 @@ class Customers extends CI_Model
 				 	}
 				 	break;
 			}
-
 			return true;
 
 		}

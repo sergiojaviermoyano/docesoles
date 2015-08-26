@@ -64,9 +64,6 @@
               }
         }
     });
-
-    //$("#cliDateOfBirth").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-    //$('#cliDateOfBirth').datepicker();
   });
 
   var idCli = 0;
@@ -85,7 +82,7 @@
 			                WaitingClose();
 			                $("#modalBodyCustomer").html(result.html);
                       $('#cliDateOfBirth').datepicker();
-                      ActiveCamera();
+                      //ActiveCamera();
 			                setTimeout("$('#modalCustomer').modal('show')",800);
     					},
     		error: function(result){
@@ -98,6 +95,7 @@
 
   
   $('#btnSave').click(function(){
+
   	if(acCli == 'View')
   	{
   		$('#modalCustomer').modal('hide');
@@ -130,6 +128,9 @@
     	return;
     }
 
+    var picture = jQuery('#foto');
+    var blob = picture[0].toDataURL("image/png");//.replace("data:image/png;base64,","");
+
     $('#errorCust').fadeOut('slow');
     WaitingOpen('Guardando cambios');
     	$.ajax({
@@ -146,7 +147,9 @@
                     dom: $('#cliAddress').val(),
                     tel: $('#cliPhone').val(),
                     movil: $('#cliMovil').val(),
-                    zona: $('#zonaId').val()
+                    zona: $('#zonaId').val(),
+                    img: blob,
+                    update: $('#updatePicture').val()
                   },
     		url: 'index.php/customer/setCustomer', 
     		success: function(result){
@@ -162,45 +165,11 @@
     		});
   });
 
-function ActiveCamera(){
-  window.URL = window.URL || window.webkitURL;
-  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || function(){alert('Su navegador no soporta navigator.getUserMedia().');};
-   
-  jQuery(document).ready(function(){
-      //Este objeto guardará algunos datos sobre la cámara
-      window.datosVideo = {
-          'StreamVideo': null,
-          'url' : null
-      };
-       
-      jQuery('#botonIniciar').on('click', function(e){
-          //Pedimos al navegador que nos de acceso a 
-          //algún dispositivo de video (la webcam)
-          navigator.getUserMedia({'audio':false, 'video':true}, function(streamVideo){
-              datosVideo.StreamVideo = streamVideo;
-              datosVideo.url = window.URL.createObjectURL(streamVideo);
-              jQuery('#camara').attr('src', datosVideo.url);
-          }, function(){
-              alert('No fue posible obtener acceso a la cámara.');
-          });
-   
-      });
-   
-      jQuery('#botonDetener').on('click', function(e){
-          if(datosVideo.StreamVideo){
-              datosVideo.StreamVideo.stop();
-              window.URL.revokeObjectURL(datosVideo.url);
-          };
-      });
-  });
-}
-
 </script>
 
 <style type="text/css">
-    .contenedor{ width: 350px; float: left;}
-    .titulo{ font-size: 12pt; font-weight: bold;}
-    #camara, #foto{
+    .contenedor{ width: 350px; float: center;}
+    #camara, #foto, #imgCamera{
         width: 320px;
         min-height: 240px;
         border: 1px solid #008000;

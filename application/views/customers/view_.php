@@ -105,20 +105,24 @@
 
 
     <div class="tab-pane" id="tab_2"> <!-- Imagen del cliente -->
+      <center>
       <div id='botonera'>
-          <input id='botonIniciar' type='button' value = 'Iniciar'></input>
-          <input id='botonDetener' type='button' value = 'Detener'></input>
-          <input id='botonFoto' type='button' value = 'Foto'></input>
+          <button id='botonIniciar' type="button" class="btn btn-success" onclick="ActiveCamera()"><i class="fa fa-play"></i></button>
+          <button id='botonDetener' type="button" class="btn btn-danger" onclick="StopCamera()" disabled="disabled"><i class="fa fa-pause"></i></button>
+          <button id='botonFoto' type="button" class="btn btn-primary" disabled="disabled"><i class="fa fa-camera"></i></button>
       </div>
       <div class="contenedor">
-          <div class="titulo">Cámara</div>
+          <h5>Cámara</h5>
           <video id="camara" autoplay controls></video>
       </div>
       <div class="contenedor">
-          <div class="titulo">Foto</div>
-          <canvas id="foto" ></canvas>
-      </div>   
-    </div>
+          <h5>Foto</h5>
+          <canvas id="foto" style="display:none"></canvas>
+          <img id="imgCamera" src="<?php echo $data['customer']['cliImagePath'];?>">
+          <input type="hidden" id="updatePicture" value="0">
+      </div>
+      </center>
+    </div>  
 
 
     <div class="tab-pane" id="tab_3"> <!-- Acerca del cliente -->
