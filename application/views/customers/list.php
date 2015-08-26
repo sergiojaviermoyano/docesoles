@@ -7,7 +7,7 @@
           <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadCust(0,'Add')" id="btnAdd" title="Nuevo">Agregar</button>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table id="users" class="table table-bordered table-hover">
+          <table id="customers" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th width="20%">Acciones</th>
@@ -44,16 +44,29 @@
 <script>
   $(function () {
     //$("#groups").DataTable();
-    $('#users').DataTable({
+    $('#customers').DataTable({
       "paging": true,
       "lengthChange": true,
       "searching": true,
       "ordering": true,
       "info": true,
-      "autoWidth": true
+      "autoWidth": true,
+      "language": {
+            "lengthMenu": "Ver _MENU_ filas por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+            "sSearch": "Buscar:  ",
+            "oPaginate": {
+                "sNext": "Sig.",
+                "sPrevious": "Ant."
+              }
+        }
     });
 
-    $("#cliDateOfBirth").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //$("#cliDateOfBirth").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //$('#cliDateOfBirth').datepicker();
   });
 
   var idCli = 0;
@@ -71,6 +84,8 @@
     		success: function(result){
 			                WaitingClose();
 			                $("#modalBodyCustomer").html(result.html);
+                      $('#cliDateOfBirth').datepicker();
+                      ActiveCamera();
 			                setTimeout("$('#modalCustomer').modal('show')",800);
     					},
     		error: function(result){
@@ -83,7 +98,6 @@
 
   
   $('#btnSave').click(function(){
-  	
   	if(acCli == 'View')
   	{
   		$('#modalCustomer').modal('hide');
@@ -110,13 +124,9 @@
     {
       hayError = true;
     }
-    /*
-    if($('#usrPassword').val() != $('#usrPasswordConf').val()){
-      hayError = true;
-    }
-    */
+
     if(hayError == true){
-    	$('#errorUsr').fadeIn('slow');
+    	$('#errorCust').fadeIn('slow');
     	return;
     }
 
@@ -152,8 +162,50 @@
     		});
   });
 
+function ActiveCamera(){
+  window.URL = window.URL || window.webkitURL;
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || function(){alert('Su navegador no soporta navigator.getUserMedia().');};
+   
+  jQuery(document).ready(function(){
+      //Este objeto guardará algunos datos sobre la cámara
+      window.datosVideo = {
+          'StreamVideo': null,
+          'url' : null
+      };
+       
+      jQuery('#botonIniciar').on('click', function(e){
+          //Pedimos al navegador que nos de acceso a 
+          //algún dispositivo de video (la webcam)
+          navigator.getUserMedia({'audio':false, 'video':true}, function(streamVideo){
+              datosVideo.StreamVideo = streamVideo;
+              datosVideo.url = window.URL.createObjectURL(streamVideo);
+              jQuery('#camara').attr('src', datosVideo.url);
+          }, function(){
+              alert('No fue posible obtener acceso a la cámara.');
+          });
+   
+      });
+   
+      jQuery('#botonDetener').on('click', function(e){
+          if(datosVideo.StreamVideo){
+              datosVideo.StreamVideo.stop();
+              window.URL.revokeObjectURL(datosVideo.url);
+          };
+      });
+  });
+}
+
 </script>
 
+<style type="text/css">
+    .contenedor{ width: 350px; float: left;}
+    .titulo{ font-size: 12pt; font-weight: bold;}
+    #camara, #foto{
+        width: 320px;
+        min-height: 240px;
+        border: 1px solid #008000;
+    }
+</style>
 
 <!-- Modal -->
 <div class="modal fade" id="modalCustomer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

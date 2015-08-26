@@ -17,8 +17,12 @@
                             </a>
                             <ul class="treeview-menu">';
                             foreach ($m['childrens'] as $ch) {
+                              $actions = "";
+                              foreach ($ch['actions'] as $a) {
+                                $actions .= $a['actDescription'] .'-';
+                              }
                               echo '<li>
-                                      <a href="#" onClick="cargarView(\''.$ch['menuController'].'\',\''.$ch['menuView'].'\')">
+                                      <a href="#" onClick="cargarView(\''.$ch['menuController'].'\',\''.$ch['menuView'].'\', \''.$actions.'\')">
                                         <i class="'.$ch['menuIcon'].'"></i> '.str_replace("_", " ", $ch['menuName']).' 
                                       </a>
                                     </li>';
@@ -28,8 +32,12 @@
                   }
                   else
                   {
+                    $actions = "";
+                    foreach ($m['actions'] as $a) {
+                      $actions .= $a['actDescription'] .'-';
+                    }
                     echo '<li class="treeview">
-                            <a href="#" onClick="cargarView(\''.$m['menuController'].'\',\''.$m['menuView'].'\')">
+                            <a href="#" onClick="cargarView(\''.$m['menuController'].'\',\''.$m['menuView'].'\', \''.$actions.'\')">
                               <i class="'.$m['menuIcon'].'"></i> <span>'.str_replace("_", " ", $m['menuName']).'</span>
                             </a>
                           </li>';
@@ -42,8 +50,9 @@
     </aside> 
 
       <script>
-      function cargarView(controller, action)
+      function cargarView(controller, action, actions)
       {
+        //alert(actions);
         WaitingOpen();
         $('#content').empty();
         $("#content").load("<?php echo base_url(); ?>index.php/"+controller+"/"+action+"");

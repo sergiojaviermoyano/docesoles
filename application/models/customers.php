@@ -39,6 +39,8 @@ class Customers extends CI_Model
 			if ($query->num_rows() != 0)
 			{
 				$u = $query->result_array();
+				$u[0]['cliDateOfBirth'] = explode('-', $u[0]['cliDateOfBirth']);
+				$u[0]['cliDateOfBirth'] = $u[0]['cliDateOfBirth'][2].'-'.$u[0]['cliDateOfBirth'][1].'-'.$u[0]['cliDateOfBirth'][0];
 				$data['customer'] = $u[0];
 			} else {
 				$cust = array();

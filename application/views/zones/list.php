@@ -3,30 +3,33 @@
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Grupos</h3>
-          <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadGrp(0,'Add')" id="btnAdd" title="Nuevo">Agregar</button>
+          <h3 class="box-title">Zonas</h3>
+          <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadZone(0,'Add')" id="btnAdd" title="Nueva">Agregar</button>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table id="groups" class="table table-bordered table-hover">
+          <table id="users" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th width="20%">Acciones</th>
-                <th>Nombre</th>
+                <th>Descripción</th>
               </tr>
             </thead>
             <tbody>
               <?php
-              	foreach($list as $g)
-		        {
-		                echo '<tr>';
-		                echo '<td>
-		                		<i class="fa fa-fw fa-pencil" style="color: #f39c12;" title="Editar" onclick="LoadGrp('.$g['grpId'].',\'Edit\')"></i>
-		                		<i class="fa fa-fw fa-times-circle" style="color: #dd4b39;" title="Eliminar" onclick="LoadGrp('.$g['grpId'].',\'Del\')"></i>
-		                		<i class="fa fa-fw fa-search" style="color: #3c8dbc" title="Consultar" onclick="LoadGrp('.$g['grpId'].',\'View\')"></i> 
-		                	  </td>';
-		                echo '<td style="text-align: left">'.$g['grpName'].'</td>';
-		                echo '</tr>';
-		        }
+              	foreach($list as $z)
+    		        {
+                  //var_dump($u);
+                  
+	                echo '<tr>';
+	                echo '<td>
+	                		<i class="fa fa-fw fa-pencil" style="color: #f39c12;" title="Editar" onclick="LoadZone('.$z['zonaId'].',\'Edit\')"></i>
+	                		<i class="fa fa-fw fa-times-circle" style="color: #dd4b39;" title="Eliminar" onclick="LoadZone('.$z['zonaId'].',\'Del\')"></i>
+	                		<i class="fa fa-fw fa-search" style="color: #3c8dbc" title="Consultar" onclick="LoadZone('.$z['zonaId'].',\'View\')"></i> 
+	                	  </td>';
+	                echo '<td style="text-align: left">'.$z['zonaName'].'</td>';
+	                echo '</tr>';
+                  
+    		        }
               ?>
             </tbody>
           </table>
@@ -39,7 +42,7 @@
 <script>
   $(function () {
     //$("#groups").DataTable();
-    $('#groups').DataTable({
+    $('#users').DataTable({
         "paging": true,
         "lengthChange": true,
         "searching": true,
@@ -57,26 +60,27 @@
                   "sNext": "Sig.",
                   "sPrevious": "Ant."
                 }
-          }
-      });
+        }
+    });
   });
 
-  var idGrupo = 0;
-  var acGrupo = '';
-
-  function LoadGrp(id_, action){
-  	idGrupo = id_;
-  	acGrupo = action;
+  
+  var idZone = 0;
+  var acZone = '';
+  
+  function LoadZone(id_, action){
+  	idZone = id_;
+  	acZone = action;
   	LoadIconAction('modalAction',action);
-  	WaitingOpen('Cargando menu');
+  	WaitingOpen('Cargando Zona');
       $.ajax({
           	type: 'POST',
           	data: { id : id_, act: action },
-    		url: 'index.php/group/getMenu', 
+    		url: 'index.php/zone/getZone', 
     		success: function(result){
 			                WaitingClose();
-			                $("#modalBodyGrp").html(result.html);
-			                setTimeout("$('#modalGrp').modal('show')",800);
+			                $("#modalBodyZone").html(result.html);
+			                setTimeout("$('#modalZone').modal('show')",800);
     					},
     		error: function(result){
     					WaitingClose();
@@ -86,41 +90,40 @@
     		});
   }
 
+  
   $('#btnSave').click(function(){
   	
-  	if(acGrupo == 'View')
+  	if(acZone == 'View')
   	{
-  		$('#modalGrp').modal('hide');
+  		$('#modalZone').modal('hide');
   		return;
   	}
 
-  	var hayError = true;
-  	var permission = [];
-  	$('#permission :checked').each(function() {
-        hayError = false;
-        permission.push($(this).attr('id'));
-    });
-
-    if($('#grpName').val() == '')
+  	var hayError = false;
+    if($('#zonaName').val() == '')
     {
     	hayError = true;
     }
 
     if(hayError == true){
-    	$('#errorGrp').fadeIn('slow');
+    	$('#errorZone').fadeIn('slow');
     	return;
     }
 
-    $('#errorGrp').fadeOut('slow');
+    $('#errorUsr').fadeOut('slow');
     WaitingOpen('Guardando cambios');
     	$.ajax({
           	type: 'POST',
-          	data: { id : idGrupo, act: acGrupo, name: $('#grpName').val(), options: permission },
-    		url: 'index.php/group/setMenu', 
+          	data: { 
+                    id : idZone, 
+                    act: acZone, 
+                    zone: $('#zonaName').val()
+                  },
+    		url: 'index.php/zone/setZone', 
     		success: function(result){
                 			WaitingClose();
-                			$('#modalGrp').modal('hide');
-                			setTimeout("cargarView('group', 'index');",1000);
+                			$('#modalZone').modal('hide');
+                			setTimeout("cargarView('zone', 'index');",1000);
     					},
     		error: function(result){
     					WaitingClose();
@@ -129,18 +132,19 @@
           	dataType: 'json'
     		});
   });
+
 </script>
 
 
 <!-- Modal -->
-<div class="modal fade" id="modalGrp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalZone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Grupo</h4> 
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> Zona</h4> 
       </div>
-      <div class="modal-body" id="modalBodyGrp">
+      <div class="modal-body" id="modalBodyZone">
         
       </div>
       <div class="modal-footer">
