@@ -65,7 +65,7 @@ class Groups extends CI_Model
 						//Añadir los hijos
 						$items->childrens = $querySon->result();
 						foreach ($items->childrens as $son) {
-							$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
+							$this->db->select('sismenuactions.*, sisactions.actDescriptionSpanish as actDescription, sisgroupsactions.grpactId ');
 							$this->db->from('sismenuactions');
 							$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
 							$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');
@@ -82,7 +82,7 @@ class Groups extends CI_Model
 					{
 						//Buscar las acciones
 						$items->childrens = array();
-						$this->db->select('sismenuactions.*, sisactions.actDescription, sisgroupsactions.grpactId ');
+						$this->db->select('sismenuactions.*, sisactions.actDescriptionSpanish as actDescription, sisgroupsactions.grpactId ');
 						$this->db->from('sismenuactions');
 						$this->db->join('sisactions', 'sisactions.actId = sismenuactions.actId');
 						$this->db->join('sisgroupsactions', ' sismenuactions.menuAccId = sisgroupsactions.menuAccId And sisgroupsactions.grpId = '.$idGrp.'', 'left');

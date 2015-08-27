@@ -129,7 +129,13 @@
     }
 
     var picture = jQuery('#foto');
-    var blob = picture[0].toDataURL("image/png");//.replace("data:image/png;base64,","");
+    var blob = picture[0].toDataURL("image/png");
+
+    var preferences = [];
+    preferences.push(0);
+    $('#preferences :checked').each(function() {
+        preferences.push($(this).attr('id'));
+    });
 
     $('#errorCust').fadeOut('slow');
     WaitingOpen('Guardando cambios');
@@ -149,7 +155,9 @@
                     movil: $('#cliMovil').val(),
                     zona: $('#zonaId').val(),
                     img: blob,
-                    update: $('#updatePicture').val()
+                    update: $('#updatePicture').val(),
+                    pref: preferences,
+                    days: $('#cliDay').val()
                   },
     		url: 'index.php/customer/setCustomer', 
     		success: function(result){

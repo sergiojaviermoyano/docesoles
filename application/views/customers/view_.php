@@ -100,6 +100,20 @@
               ?>
             </select>
           </div>
+      </div><br>
+      <div class="row">
+        <div class="col-xs-4">
+            <label style="margin-top: 7px;">Días proxímo cobro: </label>
+          </div>
+        <div class="col-xs-5">
+            <select class="form-control" id="cliDay"  <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> >
+              <?php 
+                for ($i = 1; $i < 31; $i++) {
+                  echo '<option value="'.$i.'" '.($data['customer']['cliDay'] == $i ? 'selected' : '').'>'.$i.'</option>';
+                }
+              ?>
+            </select>
+          </div>
       </div>
     </div>
 
@@ -126,7 +140,31 @@
 
 
     <div class="tab-pane" id="tab_3"> <!-- Acerca del cliente -->
-      
+       <?php //var_dump($data['preferences']);?>
+       <?php
+          foreach ($data['preferences'] as $pre) {
+            ?>
+            <div id="preferences">
+            <a role="button" data-toggle="collapse" href="#collapse<?php echo $pre->famName;?>" aria-expanded="false" aria-controls="collapse<?php echo $pre->famName;?>" class="modal-title"><?php echo str_replace("_", " ", $pre->famName);?></a>
+            <div class="collapse" id="collapse<?php echo $pre->famName;?>">
+              <div>
+                <?php
+                  if(count($pre->subf) >0)
+                  {
+                    foreach ($pre->subf as $sf) {
+                      if($sf['acepted'] == null)
+                        echo '<input type="checkbox" id="'.$sf['sfamId'].'" style="margin-left: 5%;" '.($data['read'] == true ? 'disabled="disabled"' : '').'>'.$sf['sfamName'].'<br>';
+                      else
+                        echo '<input type="checkbox" id="'.$sf['sfamId'].'" style="margin-left: 5%;" '.($data['read'] == true ? 'disabled="disabled"' : '').' checked>'.$sf['sfamName'].'<br>';
+                    }
+                  }
+                ?>
+              </div>
+            </div>  
+            </div>
+            <?php
+          }
+        ?>
     </div>
   </div>
 </div>

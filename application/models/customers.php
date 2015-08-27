@@ -64,6 +64,7 @@ class Customers extends CI_Model
 				$cust['cliImagePath'] = '';
 				$cust['zonaId'] = '';
 				$cust['cliImagePath'] = '';
+				$cust['cliDay'] = '30';
 
 				$data['customer'] = $cust;
 			}
@@ -80,6 +81,33 @@ class Customers extends CI_Model
 			if ($query->num_rows() != 0)
 			{
 				$data['zone'] = $query->result_array();	
+			}
+
+			//Prefrencias
+			$data['preferences'] = array();
+			$query= $this->db->get('conffamily');
+			if ($query->num_rows() != 0) {
+					
+					foreach ($query->result() as $f) {
+
+						//-----------
+						$this->db->select('confsubfamily.*, admcustomerpreferences.sfamId as acepted ');
+						$this->db->from('confsubfamily');
+						$this->db->join('admcustomerpreferences', ' admcustomerpreferences.sfamId = confsubfamily.sfamId And admcustomerpreferences.cliId = '.$idCust.'', 'left');
+						$this->db->where(array('famId'=>$f->famId));
+						//-----------
+
+						$querySF = $this->db->get();
+						if($querySF->num_rows() != 0) {
+							$f->subf = $querySF->result_array();	
+							$data['preferences'][] = $f;
+						} else {
+							//No agregar a la lista
+						}
+					}
+
+			} else {
+				//No hay subfamilias
 			}
 			
 			return $data;
@@ -108,6 +136,8 @@ class Customers extends CI_Model
 			$zona = $data['zona'];
 			$img = $data['img'];
 			$update = $data['update'];
+			$preferences = $data['pref'];
+			$day = $data['days'];
 
 
 			$data = array(
@@ -122,7 +152,8 @@ class Customers extends CI_Model
 				   'cliEmail' => $mail,
 				   'cliImagePath' => '',
 				   'zonaId' => $zona,
-				   'cliImagePath' => ($update == 0 ? '' : $id.'.png')
+				   'cliImagePath' => ($update == 0 ? '' : $id.'.png'),
+				   'cliDay' => $day
 				);
 
 			switch($act){
@@ -130,7 +161,7 @@ class Customers extends CI_Model
 					//Agregar Usuario 
 					if($this->db->insert('admcustomers', $data) == false) {
 						return false;
-					}else{
+					} else {
 						$id = $this->db->insert_id();
 
 						$img = str_replace('data:image/png;base64,', '', $img);
@@ -145,7 +176,21 @@ class Customers extends CI_Model
 				 		return false;
 				 		}
 
-						return true;
+				 		//Agregar preferencias
+				 		if(count($preferences) > 0) {
+					 		foreach ($preferences as $p) {
+					 			if($p != 0) {
+									$data = array(
+									   'sfamId' => $p,
+									   'cliId' => $id
+									);
+									if($this->db->insert('admcustomerpreferences', $data) == false) {
+										return false;
+									}
+								}
+							}
+						}
+
 					}
 					break;
 
@@ -159,9 +204,34 @@ class Customers extends CI_Model
 					$img = str_replace(' ', '+', $img);
 					$data = base64_decode($img);
 					file_put_contents('assets/img/customers/'.$id.'.png', $data);
+
+					//Eliminar preferencias
+					if($this->db->delete('admcustomerpreferences', array('cliId' => $id)) == false) {
+						return false;
+					}
+
+					//Agregar preferencias
+					if(count($preferences) > 0) {
+				 		foreach ($preferences as $p) {
+				 			if($p != 0) {
+								$data = array(
+								   'sfamId' => $p,
+								   'cliId' => $id
+								);
+								if($this->db->insert('admcustomerpreferences', $data) == false) {
+									return false;
+								}
+							}
+						}
+					}
 				 	break;
 
 				 case 'Del':
+				 	//Eliminar preferencias
+					if($this->db->delete('admcustomerpreferences', array('cliId' => $id)) == false) {
+						return false;
+					}
+
 				 	//Eliminar usuario
 				 	if($this->db->delete('admcustomers', array('cliId'=>$id)) == false) {
 				 		return false;
