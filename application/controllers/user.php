@@ -9,9 +9,10 @@ class user extends CI_Controller {
 		$this->load->model('Users');
 	}
 
-	public function index()
+	public function index($permission)
 	{
 		$data['list'] = $this->Users->User_List();
+		$data['permission'] = $permission;
 		$this->load->view('users/list', $data);
 	}
 	

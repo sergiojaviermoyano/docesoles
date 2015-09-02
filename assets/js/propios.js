@@ -38,78 +38,6 @@ function LoadIconAction(idTag, action){
 	$('#'+idTag).html(icon + actt);
 }
 
-function ActiveCamera_(){
-	  //Nos aseguramos que estén definidas
-	//algunas funciones básicas
-	window.URL = window.URL || window.webkitURL;
-	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia ||
-	function() {
-	    alert('Su navegador no soporta navigator.getUserMedia().');
-	};
-
-	//Este objeto guardará algunos datos sobre la cámara
-	window.datosVideo = {
-	    'StreamVideo': null,
-	    'url': null
-	}
-
-	jQuery('#botonIniciar').on('click', function(e) {
-
-	    //Pedimos al navegador que nos da acceso a 
-	    //algún dispositivo de video (la webcam)
-	    navigator.getUserMedia({
-	        'audio': false,
-	        'video': true
-	    }, function(streamVideo) {
-	        datosVideo.StreamVideo = streamVideo;
-	        datosVideo.url = window.URL.createObjectURL(streamVideo);
-	        jQuery('#camara').attr('src', datosVideo.url);
-	        //Desactivar btn Iniciar 
-	        $("#botonDetener").removeAttr("disabled", "disabled");
-	        $("#botonFoto").removeAttr("disabled", "disabled");
-	        $("#botonIniciar").attr("disabled", "disabled");
-
-	    }, function() {
-	        alert('No fue posible obtener acceso a la cámara.');
-	    });
-
-	});
-
-	jQuery('#botonDetener').on('click', function(e) {
-
-	    if (datosVideo.StreamVideo) {
-	        datosVideo.StreamVideo.stop();
-	        window.URL.revokeObjectURL(datosVideo.url);
-	        $("#botonDetener").attr("disabled", "disabled");
-	        $("#botonFoto").attr("disabled", "disabled");
-	        $("#botonIniciar").removeAttr("disabled", "disabled");
-	    }
-
-	});
-
-	jQuery('#botonFoto').on('click', function(e) {
-	    var oCamara, oFoto, oContexto, w, h;
-
-	    oCamara = jQuery('#camara');
-	    oFoto = jQuery('#foto');
-	    oCanvas = jQuery('#canvas');
-	    w = oCamara.width();
-	    h = oCamara.height();
-	    oFoto.attr({
-	        'width': w,
-	        'height': h
-	    });
-	    oContexto = oFoto[0].getContext('2d');
-	    oContexto.drawImage(oCamara[0], 0, 0, w, h);
-
-	    oCanvas.getContext('2d').drawImage(oCamara[0],0,0);
-		var imgData = oCanvas.toDataURL('image/png');
-		$('#imgCamera').setAttribute('src',imgData);
-
-	});
-}
-
-
 function ActiveCamera() {
 
 	$("#botonDetener").removeAttr("disabled", "disabled");
@@ -155,4 +83,70 @@ function StopCamera() {
 	        video.pause();
 	      },function(e){console.log(e)});
 	}
+}
+
+
+function ActiveCameraArt() {
+
+	$("#botonDetener").removeAttr("disabled", "disabled");
+	$("#botonFoto1").removeAttr("disabled", "disabled");
+	$("#botonFoto2").removeAttr("disabled", "disabled");
+	$("#botonFoto3").removeAttr("disabled", "disabled");
+	$("#botonFoto4").removeAttr("disabled", "disabled");
+	$("#botonIniciar").attr("disabled", "disabled");
+  	init();
+  	function init(){
+	    var video = document.querySelector('#camara'), 
+	    canvas = document.querySelector('#foto'), 
+	    btn1 = document.querySelector('#botonFoto1'), 
+	    btn2 = document.querySelector('#botonFoto2'), 
+	    btn3 = document.querySelector('#botonFoto3'), 
+	    btn4 = document.querySelector('#botonFoto4'), 
+	    img1 = document.querySelector('#imgCamera1'),
+	    img2 = document.querySelector('#imgCamera2'),
+	    img3 = document.querySelector('#imgCamera3'),
+	    img4 = document.querySelector('#imgCamera4');
+
+	    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUSerMedia || navigator.msGetUserMedia);
+
+	    if(navigator.getUserMedia){
+	      navigator.getUserMedia({video:true},function(stream){
+	        video.src = window.URL.createObjectURL(stream);
+	        video.play();
+	      },function(e){console.log(e)});
+
+	      video.addEventListener('loadedmetadata',function(){canvas.width = video.videoWidth, canvas.height = video.videoHeight;},false);
+	      btn1.addEventListener('click',function(){
+	      	$('#updatePicture1').val('1');
+	        canvas.getContext('2d').drawImage(video,0,0);
+	        var imgData = canvas.toDataURL('image/png');
+	        img1.setAttribute('src',imgData);
+
+	      });
+	      btn2.addEventListener('click',function(){
+	      	$('#updatePicture2').val('1');
+	        canvas.getContext('2d').drawImage(video,0,0);
+	        var imgData = canvas.toDataURL('image/png');
+	        img2.setAttribute('src',imgData);
+
+	      });
+	      btn3.addEventListener('click',function(){
+	      	$('#updatePicture3').val('1');
+	        canvas.getContext('2d').drawImage(video,0,0);
+	        var imgData = canvas.toDataURL('image/png');
+	        img3.setAttribute('src',imgData);
+
+	      });
+	      btn4.addEventListener('click',function(){
+	      	$('#updatePicture4').val('1');
+	        canvas.getContext('2d').drawImage(video,0,0);
+	        var imgData = canvas.toDataURL('image/png');
+	        img4.setAttribute('src',imgData);
+
+	      });
+
+	    }else{
+	      alert("Actualiza tu nvegador");
+	    }
+  	}
 }

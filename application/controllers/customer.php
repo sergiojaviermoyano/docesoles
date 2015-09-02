@@ -9,9 +9,10 @@ class customer extends CI_Controller {
 		$this->load->model('Customers');
 	}
 
-	public function index()
+	public function index($permission)
 	{
 		$data['list'] = $this->Customers->Customers_List();
+		$data['permission'] = $permission;
 		$this->load->view('customers/list', $data);
 	}
 	

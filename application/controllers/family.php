@@ -8,9 +8,10 @@ class family extends CI_Controller {
 		$this->load->model('Familys');
 	}
 
-	public function index()
+	public function index($permission)
 	{
 		$data['list'] = $this->Familys->Family_List();
+		$data['permission'] = $permission;
 		$this->load->view('familys/list', $data);
 	}
 	
@@ -33,9 +34,10 @@ class family extends CI_Controller {
 		}
 	}
 	
-	public function indexSF()
+	public function indexSF($permission)
 	{
 		$data['list'] = $this->Familys->FamilySF_List();
+		$data['permission'] = $permission;
 		$this->load->view('familys/listSF', $data);
 	}
 

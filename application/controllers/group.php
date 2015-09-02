@@ -9,9 +9,10 @@ class group extends CI_Controller {
 		$this->load->model('Groups');
 	}
 
-	public function index()
+	public function index($permission)
 	{
 		$data['list'] = $this->Groups->Group_List();
+		$data['permission'] = $permission;
 		$this->load->view('groups/list', $data);
 	}
 

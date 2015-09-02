@@ -1,10 +1,15 @@
+<input type="hidden" id="permission" value="<?php echo $permission;?>">
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
           <h3 class="box-title">Familias de Produtos</h3>
-          <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadFamily(0,'Add')" id="btnAdd" title="Nueva">Agregar</button>
+          <?php
+          if (strpos($permission,'Add') !== false) {
+            echo '<button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadFamily(0,\'Add\')" id="btnAdd" title="Nueva">Agregar</button>';
+          }
+          ?>
         </div><!-- /.box-header -->
         <div class="box-body">
           <table id="familys" class="table table-bordered table-hover">
@@ -19,13 +24,18 @@
               	foreach($list as $f)
     		        {
                   //var_dump($u);
-                  
-	                echo '<tr>';
-	                echo '<td>
-	                		<i class="fa fa-fw fa-pencil" style="color: #f39c12;" title="Editar" onclick="LoadFamily('.$f['famId'].',\'Edit\')"></i>
-	                		<i class="fa fa-fw fa-times-circle" style="color: #dd4b39;" title="Eliminar" onclick="LoadFamily('.$f['famId'].',\'Del\')"></i>
-	                		<i class="fa fa-fw fa-search" style="color: #3c8dbc" title="Consultar" onclick="LoadFamily('.$f['famId'].',\'View\')"></i> 
-	                	  </td>';
+                  echo '<tr>';
+                  echo '<td>';
+                  if (strpos($permission,'Edit') !== false) {
+	                 echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" title="Editar" onclick="LoadFamily('.$f['famId'].',\'Edit\')"></i>';
+                  }
+                  if (strpos($permission,'Del') !== false) {
+	                 echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" title="Eliminar" onclick="LoadFamily('.$f['famId'].',\'Del\')"></i>';
+                  }
+                  if (strpos($permission,'View') !== false) {
+	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" title="Consultar" onclick="LoadFamily('.$f['famId'].',\'View\')"></i>';
+                  }
+	                echo '</td>';
 	                echo '<td style="text-align: left">'.$f['famName'].'</td>';
 	                echo '</tr>';
                   
@@ -123,7 +133,7 @@
     		success: function(result){
                 			WaitingClose();
                 			$('#modalFamily').modal('hide');
-                			setTimeout("cargarView('Family', 'index');",1000);
+                			setTimeout("cargarView('Family', 'index', '"+$('#permission').val()+"');",1000);
     					},
     		error: function(result){
     					WaitingClose();

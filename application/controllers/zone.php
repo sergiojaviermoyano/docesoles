@@ -9,9 +9,10 @@ class zone extends CI_Controller {
 		$this->load->model('Zones');
 	}
 
-	public function index()
+	public function index($permission)
 	{
 		$data['list'] = $this->Zones->Zone_List();
+		$data['permission'] = $permission;
 		$this->load->view('zones/list', $data);
 	}
 	

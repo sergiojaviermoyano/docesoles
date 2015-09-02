@@ -19,7 +19,8 @@
                             foreach ($m['childrens'] as $ch) {
                               $actions = "";
                               foreach ($ch['actions'] as $a) {
-                                $actions .= $a['actDescription'] .'-';
+                                if($a['grpactId'] != null)
+                                  $actions .= $a['actDescription'] .'-';
                               }
                               echo '<li>
                                       <a href="#" onClick="cargarView(\''.$ch['menuController'].'\',\''.$ch['menuView'].'\', \''.$actions.'\')">
@@ -34,7 +35,8 @@
                   {
                     $actions = "";
                     foreach ($m['actions'] as $a) {
-                      $actions .= $a['actDescription'] .'-';
+                      if($a['grpactId'] != null)
+                        $actions .= $a['actDescription'] .'-';
                     }
                     echo '<li class="treeview">
                             <a href="#" onClick="cargarView(\''.$m['menuController'].'\',\''.$m['menuView'].'\', \''.$actions.'\')">
@@ -55,7 +57,7 @@
         //alert(actions);
         WaitingOpen();
         $('#content').empty();
-        $("#content").load("<?php echo base_url(); ?>index.php/"+controller+"/"+action+"");
+        $("#content").load("<?php echo base_url(); ?>index.php/"+controller+"/"+action+"/"+actions);
         WaitingClose();
       }
       </script>

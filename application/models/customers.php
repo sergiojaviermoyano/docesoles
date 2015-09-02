@@ -150,9 +150,7 @@ class Customers extends CI_Model
 				   'cliPhone' => $tel,
 				   'cliMovil' => $movil,
 				   'cliEmail' => $mail,
-				   'cliImagePath' => '',
 				   'zonaId' => $zona,
-				   'cliImagePath' => ($update == 0 ? '' : $id.'.png'),
 				   'cliDay' => $day
 				);
 
@@ -200,10 +198,19 @@ class Customers extends CI_Model
 				 		return false;
 				 	}
 
-				 	$img = str_replace('data:image/png;base64,', '', $img);
-					$img = str_replace(' ', '+', $img);
-					$data = base64_decode($img);
-					file_put_contents('assets/img/customers/'.$id.'.png', $data);
+				 	if($update == true) {
+					 	$img = str_replace('data:image/png;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+						file_put_contents('assets/img/customers/'.$id.'.png', $data);
+
+						$data = array(
+									'cliImagePath' => $id.'.png'
+								);
+							if($this->db->update('admcustomers', $data, array('cliId'=>$id)) == false) {
+					 		return false;
+					 		}
+				 	}
 
 					//Eliminar preferencias
 					if($this->db->delete('admcustomerpreferences', array('cliId' => $id)) == false) {

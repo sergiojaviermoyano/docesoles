@@ -1,10 +1,15 @@
+<input type="hidden" id="permission" value="<?php echo $permission;?>">
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
           <h3 class="box-title">Clientes</h3>
-          <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadCust(0,'Add')" id="btnAdd" title="Nuevo">Agregar</button>
+          <?php
+          if (strpos($permission,'Add') !== false) {
+            echo '<button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadCust(0,\'Add\')" id="btnAdd">Agregar</button>';
+          }
+          ?>
         </div><!-- /.box-header -->
         <div class="box-body">
           <table id="customers" class="table table-bordered table-hover">
@@ -21,11 +26,17 @@
               	foreach($list as $c)
     		        {
 	                echo '<tr>';
-	                echo '<td>
-	                		<i class="fa fa-fw fa-pencil" style="color: #f39c12;" title="Editar" onclick="LoadCust('.$c['cliId'].',\'Edit\')"></i>
-	                		<i class="fa fa-fw fa-times-circle" style="color: #dd4b39;" title="Eliminar" onclick="LoadCust('.$c['cliId'].',\'Del\')"></i>
-	                		<i class="fa fa-fw fa-search" style="color: #3c8dbc" title="Consultar" onclick="LoadCust('.$c['cliId'].',\'View\')"></i> 
-	                	  </td>';
+	                echo '<td>';
+                  if (strpos($permission,'Edit') !== false) {
+	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadCust('.$c['cliId'].',\'Edit\')"></i>';
+                  }
+                  if (strpos($permission,'Del') !== false) {
+	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCust('.$c['cliId'].',\'Del\')"></i>';
+                  }
+                  if (strpos($permission,'View') !== false) {
+	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCust('.$c['cliId'].',\'View\')"></i>';
+                  }
+	                echo '</td>';
 	                echo '<td style="text-align: left">'.$c['cliLastName'].' , '.$c['cliName'].'</td>';
                   echo '<td style="text-align: left">'.$c['cliAddress'].'</td>';
                   echo '<td style="text-align: left">'.$c['cliPhone'].' / '.$c['cliMovil'].'</td>';
@@ -163,7 +174,7 @@
     		success: function(result){
                 			WaitingClose();
                 			$('#modalCustomer').modal('hide');
-                			setTimeout("cargarView('customer', 'index');",1000);
+                			setTimeout("cargarView('customer', 'index', '"+$('#permission').val()+"');",1000);
     					},
     		error: function(result){
     					WaitingClose();
