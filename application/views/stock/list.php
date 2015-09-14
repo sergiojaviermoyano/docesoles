@@ -16,10 +16,10 @@
             <thead>
               <tr>
                 <th width="20%">Acciones</th>
-                <th>Código</th>th>
-                <th>Descripción</th>
-                <th>P. Costo</th>
-                <th>P. Venta</th>
+                <th>Producto</th>
+                <th>Ajuste</th>
+                <th>Usuario</th>
+                <th>Fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -29,20 +29,29 @@
       		        {
   	                echo '<tr>';
   	                echo '<td>';
+                    /*
                     if (strpos($permission,'Edit') !== false) {
-  	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$a['prodId'].',\'Edit\')"></i>';
+  	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'Edit\')"></i>';
                     }
                     if (strpos($permission,'Del') !== false) {
-  	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$a['prodId'].',\'Del\')"></i>';
+  	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'Del\')"></i>';
                     }
+                    */
                     if (strpos($permission,'View') !== false) {
-  	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$a['prodId'].',\'View\')"></i>';
+  	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'View\')"></i>';
                     }
   	                echo '</td>';
-                    echo '<td style="text-align: right">'.$a['prodCode'].'</td>';
-  	                echo '<td style="text-align: left">'.$a['prodDescription'].'</td>';
-                    echo '<td style="text-align: right">'.$a['prodPrice'].'</td>';
-                    echo '<td style="text-align: right">'.number_format((($a['prodPrice'] * ($a['prodMargin'] / 100)) + $a['prodPrice']),2,'.','m').'</td>';
+                    echo '<td style="text-align: left">'.$s['prodDescription'].'</td>';
+  	                echo '<td style="text-align: right">'.str_replace('-','',$s['stkCant']);
+                      if($s['stkCant'] > 0)
+                        echo '<i class="fa fa-fw fa-arrow-up" style="color: #00a65a"></i>';
+                      else
+                        echo '<i class="fa fa-fw fa-arrow-down" style="color: #dd4b39"></i>';
+                    echo '</td>';
+                    echo '<td style="text-align: left">'.$s['usrNick'].'</td>';
+                    $date = date_create($s['stkDate']);
+                    //echo date_format($date, 'Y-m-d H:i:s');
+                    echo '<td style="text-align: center">'.date_format($date, 'd-m-Y H:i').'</td>';
   	                echo '</tr>';
                     
       		        }
@@ -98,6 +107,9 @@
 			                WaitingClose();
 			                $("#modalBodyStock").html(result.html);
 			                setTimeout("$('#modalStock').modal('show')",800);
+                      $(".select2").select2({
+                        allowClear: true
+                      });
     					},
     		    error: function(result){
     					WaitingClose();
@@ -117,9 +129,14 @@
   	}
 
   	var hayError = false;
-    if($('#stkCantidad').val() == '')
+    if($('#stkCant').val() == '')
     {
     	hayError = true;
+    }
+
+    if($('#stkMotive').val() == '')
+    {
+      hayError = true;
     }
 
     if(hayError == true){
@@ -132,28 +149,17 @@
     	$.ajax({
           	type: 'POST',
           	data: { 
-                    id : idArt, 
-                    act: acArt, 
-                    code: $('#prodCode').val(),
-                    name: $('#prodDescription').val(),
-                    price: $('#prodPrice').val(),
-                    margin: $('#prodMargin').val(),
-                    sfam: $('#sfamId').val(),
-                    status: $('#prodStatus').val(),
-                    img1: blob1,
-                    img2: blob2,
-                    img3: blob3,
-                    img4: blob4,
-                    update1: $('#updatePicture1').val(),
-                    update2: $('#updatePicture2').val(),
-                    update3: $('#updatePicture3').val(),
-                    update4: $('#updatePicture4').val()
+                    id : idStk, 
+                    act: acStk, 
+                    prodId: $('#prodId').val(),
+                    cant: $('#stkCant').val(),
+                    motive: $('#stkMotive').val()
                   },
-    		url: 'index.php/article/setArticle', 
+    		url: 'index.php/stock/setMotion', 
     		success: function(result){
                 			WaitingClose();
-                			$('#modalArticle').modal('hide');
-                			setTimeout("cargarView('Article', 'index', '"+$('#permission').val()+"');",1000);
+                			$('#modalStock').modal('hide');
+                			setTimeout("cargarView('Stock', 'index', '"+$('#permission').val()+"');",1000);
     					},
     		error: function(result){
     					WaitingClose();
@@ -166,7 +172,7 @@
 </script>
 
 <!-- Modal -->
-<div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalStock" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
