@@ -10,8 +10,6 @@ class Stocks extends CI_Model
 	
 	function Stocks_List(){
 
-		//$query= $this->db->get('admstock');
-
 		$this->db->select('admstock.*, admproducts.prodDescription, sisusers.usrNick ');
 		$this->db->from('admstock');
 		$this->db->join('admproducts', 'admproducts.prodId = admstock.prodId');
