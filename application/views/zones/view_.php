@@ -8,7 +8,7 @@
 </div>
 <div class="row">
 	<div class="col-xs-4">
-      <label style="margin-top: 7px;">Descripción: </label>
+      <label style="margin-top: 7px;">Descripción <strong style="color: #dd4b39">*</strong>: </label>
     </div>
 	<div class="col-xs-5">
       <input type="text" class="form-control" placeholder="Zona" id="zonaName" value="<?php echo $data['zone']['zonaName'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >

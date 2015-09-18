@@ -17,7 +17,7 @@
     <div class="tab-pane active" id="tab_1"> <!-- Datos generales del cliente -->
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Nro. Cliente: </label>
+            <label style="margin-top: 7px;">Nro. Cliente <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="" id="cliNroCustomer" value="<?php echo $data['customer']['cliNroCustomer'];?>" disabled="disabled" >
@@ -25,7 +25,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Nombre: </label>
+            <label style="margin-top: 7px;">Nombre <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="Nombre" id="cliName" value="<?php echo $data['customer']['cliName'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -33,7 +33,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Apellido: </label>
+            <label style="margin-top: 7px;">Apellido <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="Apellido" id="cliLastName" value="<?php echo $data['customer']['cliLastName'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -41,7 +41,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Dni: </label>
+            <label style="margin-top: 7px;">Dni <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="12345678" id="cliDni" value="<?php echo $data['customer']['cliDni'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  maxlength="8">

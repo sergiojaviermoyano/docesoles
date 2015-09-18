@@ -17,7 +17,7 @@
     <div class="tab-pane active" id="tab_1"> <!-- Datos generales del producto -->
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Código: </label>
+            <label style="margin-top: 7px;">Código <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="Código Identificador" id="prodCode" value="<?php echo $data['article']['prodCode'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -25,7 +25,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Descripción: </label>
+            <label style="margin-top: 7px;">Descripción <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="Descripción" id="prodDescription" value="<?php echo $data['article']['prodDescription'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -33,7 +33,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Precio: </label>
+            <label style="margin-top: 7px;">Precio <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="0.00" id="prodPrice" value="<?php echo $data['article']['prodPrice'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -41,7 +41,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Margen (ganancia): </label>
+            <label style="margin-top: 7px;">Margen (ganancia) <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" placeholder="0.00" id="prodMargin" value="<?php echo $data['article']['prodMargin'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  maxlength="8">
@@ -50,7 +50,7 @@
      
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Sub Familia: </label>
+            <label style="margin-top: 7px;">Sub Familia <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <select class="form-control" id="sfamId"  <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> >

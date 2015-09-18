@@ -8,7 +8,7 @@
 </div>
 <div class="row">
 	<div class="col-xs-3">
-      <label style="margin-top: 7px;">Nombre: </label>
+      <label style="margin-top: 7px;">Nombre <strong style="color: #dd4b39">*</strong>: </label>
     </div>
 	<div class="col-xs-5">
       <input type="text" class="form-control" placeholder="Nombre" id="grpName" value="<?php echo $data['name'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >

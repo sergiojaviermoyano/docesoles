@@ -6,7 +6,7 @@
         <div class="box-header">
           <h3 class="box-title">Movimientos de Cuenta Corriente</h3>
             <div class="row">
-              <div class="col-xs-1">
+              <div class="col-xs-2">
               <?php
               if (strpos($permission,'Add') !== false) {
                 echo '<button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadCtaCte(0,\'Add\')" id="btnAdd">Agregar</button>';
@@ -14,7 +14,7 @@
 
               if (strpos($permission,'Saldo') !== false) {
                 echo '</div>
-                      <div class="col-xs-1">
+                      <div class="col-xs-2">
                       <button class="btn btn-block btn-info" style="width: 100px; margin-top: 10px;" data-toggle="modal" onclick="LoadSaldoCtaCte()" id="btnBalance">Saldo</button>';
               }
               ?>
@@ -56,7 +56,7 @@
                     $date = date_create($m['crdDate']);
                     //echo date_format($date, 'Y-m-d H:i:s');
                     echo '<td style="text-align: center">'.date_format($date, 'd-m-Y H:i').'</td>';
-                    echo '<td style="text-align: left">'.$m['cliLastName'].','.$m['cliName'].'</td>';
+                    echo '<td style="text-align: left">'.$m['cliLastName'].', '.$m['cliName'].'</td>';
                     echo '<td style="text-align: left">'.$m['crdDescription'].'</td>';
                     echo '<td style="text-align: left">'.$m['usrNick'].'</td>';
   	                echo '<td style="text-align: right">';

@@ -8,7 +8,7 @@
 </div>
 <div class="row">
 	<div class="col-xs-2">
-      <label style="margin-top: 7px;">Producto: </label>
+      <label style="margin-top: 7px;">Producto <strong style="color: #dd4b39">*</strong>: </label>
     </div>
 	<div class="col-xs-9">
       <select class="form-control select2" id="prodId" style="width: 100%;" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>>
@@ -22,7 +22,7 @@
 </div><br>
 <div class="row">
 	<div class="col-xs-2">
-      <label style="margin-top: 7px;">Ajuste: </label>
+      <label style="margin-top: 7px;">Ajuste <strong style="color: #dd4b39">*</strong>: </label>
   </div>
 	<div class="col-xs-9">
       <input type="text" class="form-control" placeholder="Cantidad" id="stkCant" value="<?php echo $data['motion']['stkCant'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
@@ -30,7 +30,7 @@
 </div><br>
 <div class="row">
   <div class="col-xs-2">
-      <label style="margin-top: 7px;">Motivo: </label>
+      <label style="margin-top: 7px;">Motivo <strong style="color: #dd4b39">*</strong>: </label>
   </div>
   <div class="col-xs-9">
       <input type="text" class="form-control" placeholder="Motivo" id="stkMotive" value="<?php echo $data['motion']['stkMotive'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>  >
