@@ -49,7 +49,7 @@
       </div><br>
       <div class="row">
         <div class="col-xs-4">
-            <label style="margin-top: 7px;">Fec. Nacimiento: </label>
+            <label style="margin-top: 7px;">Fec. Nacimiento <strong style="color: #dd4b39">*</strong>: </label>
           </div>
         <div class="col-xs-5">
             <input type="text" class="form-control" id="cliDateOfBirth" placeholder="dd-mm-aaaa" value="<?php echo $data['customer']['cliDateOfBirth'];?>" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> >
@@ -114,6 +114,27 @@
               ?>
             </select>
           </div>
+      </div><br>
+      <div class="row">
+        <div class="col-xs-4">
+          <label style="margin-top: 7px;">Tipo de Cliente: </label>
+        </div>
+        <div class="col-xs-5">
+          <!--
+          <div class="input-group my-colorpicker">
+            <input type="text" class="form-control">
+            <div class="input-group-addon">
+              <i style="background-color: rgb(0, 0, 0);"></i>
+            </div>
+          </div>-->
+          <select class="form-control" id="cliColor"  <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?> >
+              <?php 
+                  echo '<option value="#00a65a" '.($data['customer']['cliColor'] == '#00a65a' ? 'selected' : '').'>Bueno</option>';
+                  echo '<option value="#f39c12 " '.($data['customer']['cliColor'] == '#f39c12' ? 'selected' : '').'>Regular</option>';
+                  echo '<option value="#dd4b39" '.($data['customer']['cliColor'] == '#dd4b39' ? 'selected' : '').'>Malo</option>';
+              ?>
+          </select>
+        </div>
       </div>
     </div>
 

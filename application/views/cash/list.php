@@ -222,7 +222,7 @@
     		success: function(result){
                 			WaitingClose();
                 			$('#modalCash').modal('hide');
-                			setTimeout("cargarView('Cash', 'index', '"+$('#permission').val()+"');",1000);
+                			setTimeout("cargarView('Cash', 'index', '"+$('#permission').val()+"'); $('.my-colorpicker').colorpicker();",1000);
     					},
     		error: function(result){
     					WaitingClose();

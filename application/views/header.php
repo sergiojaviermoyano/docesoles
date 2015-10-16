@@ -22,6 +22,12 @@
 
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/square/green.css">
 
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/plugin/fullcalendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/plugin/fullcalendar/fullcalendar.print.css" media="print">
+
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/plugin/colorpicker/bootstrap-colorpicker.min.css">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -63,7 +69,14 @@
     -->
 
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/jquery-ui.css">
-    <script src="<?php  echo base_url();?>assets/js/jquery-ui.js"></script>    
+    <script src="<?php  echo base_url();?>assets/js/jquery-ui.js"></script>  
+
+    <script src="<?php  echo base_url();?>assets/plugin/fullcalendar/moment.min.js"></script>
+    <script src="<?php  echo base_url();?>assets/plugin/fullcalendar/fullcalendar.min.js"></script> 
+
+    <!-- bootstrap color picker -->
+    <script src="<?php  echo base_url();?>assets/plugin/colorpicker/bootstrap-colorpicker.min.js"></script> 
+
 
   </head>
 

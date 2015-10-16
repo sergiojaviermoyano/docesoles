@@ -33,6 +33,10 @@ function LoadIconAction(idTag, action){
 			icon = '<i class="fa fa-fw fa-search" style="color: #3c8dbc"></i>';
 			actt = 'Consultar ';
 			break;
+		case 	'Program':
+			icon = '<i class="fa fa-fw fa-clock-o" style="color: #D81B60"></i>';
+			actt = 'Programar ';
+			break;
 	}
 
 	$('#'+idTag).html(icon + actt);

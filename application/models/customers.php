@@ -10,6 +10,8 @@ class Customers extends CI_Model
 	
 	function Customers_List(){
 
+		$this->db->order_by('cliLastName','asc');
+		$this->db->order_by('cliName','asc');
 		$query= $this->db->get('admcustomers');
 		
 		if ($query->num_rows()!=0)
@@ -65,6 +67,7 @@ class Customers extends CI_Model
 				$cust['zonaId'] = '';
 				$cust['cliImagePath'] = '';
 				$cust['cliDay'] = '30';
+				$cust['cliColor'] = '#00a65a';
 
 				$data['customer'] = $cust;
 			}
@@ -138,6 +141,7 @@ class Customers extends CI_Model
 			$update = $data['update'];
 			$preferences = $data['pref'];
 			$day = $data['days'];
+			$color = $data['color'];
 
 
 			$data = array(
@@ -151,7 +155,8 @@ class Customers extends CI_Model
 				   'cliMovil' => $movil,
 				   'cliEmail' => $mail,
 				   'zonaId' => $zona,
-				   'cliDay' => $day
+				   'cliDay' => $day,
+				   'cliColor' => $color
 				);
 
 			switch($act){
@@ -247,6 +252,35 @@ class Customers extends CI_Model
 			}
 			return true;
 
+		}
+	}
+
+	function visits($data = null){
+		if($data == null)
+		{
+			return false;
+		}
+		else
+		{
+			$month = $data['month'] + 1;
+			$this->db->select('admvisits.*, admcustomers.cliName, admcustomers.cliLastName, admcustomers.cliColor');
+			$this->db->from('admvisits');
+			$this->db->join('admcustomers', 'admcustomers.cliId = admvisits.cliId');
+			$this->db->where('admvisits.vstStatus','PN'); // Set Filter		
+			$this->db->where('month(admvisits.vstDate)', $month);
+			$this->db->or_where('month(admvisits.vstDate)', $data['month']);
+			$this->db->or_where('month(admvisits.vstDate)', ($month+1));
+
+			$query= $this->db->get();
+			
+			if ($query->num_rows()!=0)
+			{
+				return $query->result_array();	
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	

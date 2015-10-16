@@ -17,6 +17,7 @@
               <tr>
                 <th width="20%">Acciones</th>
                 <th>Cliente</th>
+                <th width="5%">DNI</th>
                 <th>Domicilio</th>
                 <th>Télefonos</th>
               </tr>
@@ -38,8 +39,9 @@
                   }
 	                echo '</td>';
 	                echo '<td style="text-align: left">'.$c['cliLastName'].' , '.$c['cliName'].'</td>';
+                  echo '<td style="text-align: left">'.$c['cliDni'].'</td>';
                   echo '<td style="text-align: left">'.$c['cliAddress'].'</td>';
-                  echo '<td style="text-align: left">'.$c['cliPhone'].' / '.$c['cliMovil'].'</td>';
+                  echo '<td style="text-align: left">'.($c['cliPhone'] != "" ? $c['cliPhone'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : '').$c['cliMovil'].'</td>';
 	                echo '</tr>';
                   
     		        }
@@ -92,7 +94,10 @@
     		success: function(result){
 			                WaitingClose();
 			                $("#modalBodyCustomer").html(result.html);
-                      $('#cliDateOfBirth').datepicker();
+                      $('#cliDateOfBirth').datepicker({
+                        changeMonth: true,
+                        changeYear: true
+                      });
                       //ActiveCamera();
 			                setTimeout("$('#modalCustomer').modal('show')",800);
     					},
@@ -134,6 +139,11 @@
       hayError = true;
     }
 
+    if($('#cliDateOfBirth').val() == '')
+    {
+      hayError = true;
+    }
+
     if(hayError == true){
     	$('#errorCust').fadeIn('slow');
     	return;
@@ -168,7 +178,8 @@
                     img: blob,
                     update: $('#updatePicture').val(),
                     pref: preferences,
-                    days: $('#cliDay').val()
+                    days: $('#cliDay').val(),
+                    color: $('#cliColor').val()
                   },
     		url: 'index.php/customer/setCustomer', 
     		success: function(result){

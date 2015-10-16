@@ -34,4 +34,16 @@ class customer extends CI_Controller {
 			echo json_encode(true);	
 		}
 	}
+
+	public function visits(){
+		$data = $this->Customers->visits($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);	
+		}
+	}
 }
