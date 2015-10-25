@@ -45,7 +45,19 @@ class dash extends CI_Controller {
 		}
 		else
 		{
-			echo json_encode(true);	
+			echo json_encode($data);	
+		}
+	}
+
+	public function cancelVisit(){
+		$data = $this->Calendar->cancelVisit($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);	
 		}
 	}
 

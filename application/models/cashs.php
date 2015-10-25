@@ -114,15 +114,6 @@ class Cashs extends CI_Model
 						return false;
 					} 
 					break;
-				
-				/*	
-				case 'Del':
-				 	//Eliminar Articulo
-				 	if($this->db->delete('admproducts', array('prodId'=>$id)) == false) {
-				 		return false;
-				 	}
-				 	break;
-				*/	
 			}
 			return true;
 
@@ -143,6 +134,97 @@ class Cashs extends CI_Model
 		}
 		
 		return $data;
+	}
+
+	function setPay($data = null){
+		if($data == null)
+		{
+			return false;
+		}
+		else
+		{
+			$insert = array();
+
+			$insert['id'] = 0;
+            $insert['act'] = 'Add';
+            $insert['cliId'] = $data['cliId'];
+            $insert['desc'] = 'Pago a cuenta';
+            $insert['debe'] = 0;
+            $insert['haber'] = $data['price'];
+            $insert['note'] = '';
+
+			if($this->setMotion($insert) == true)
+			{
+				$update = array();
+				$update['vstStatus'] = 'VS';
+				//Actualizar estado de visita
+				if($this->db->update('admvisits', $update, array('vstId'=>$data['vstId'])) == false) {
+					return false;
+				}
+
+				$this->db->select_max('crdId');
+				$query = $this->db->get('admcredits');
+
+				$m = $query->result_array();
+				$id = $m[0]['crdId'];
+
+				//Consultar el saldo 
+				$this->db->select('admcustomers.cliId, IF((sum(admcredits.crdDebe) - sum(admcredits.crdHaber) ) IS NULL, 0 ,(sum(admcredits.crdDebe) - sum(admcredits.crdHaber) )) as balance ');
+				$this->db->from('admcustomers');
+				$this->db->join('admcredits', ' admcredits.cliId = admcustomers.cliId', 'left');	
+				$this->db->where('admcustomers.cliId', $data['cliId']);
+				$this->db->group_by("admcustomers.cliId"); 
+				$query= $this->db->get();
+
+				$s = $query->result_array();
+				$saldo = $s[0]['balance'];
+
+				$visita_ = "";
+
+				if($saldo > 0)
+				{
+					//programar proxima visita
+					$this->db->select('cliDay');
+					$query = $this->db->get_where('admcustomers', array('cliId'=>$data['cliId']));
+
+					$d = $query->result_array();
+					$dias = $d[0]['cliDay'];
+
+					$this->db->select('vstDate');
+					$query = $this->db->get_where('admvisits', array('vstId'=>$data['vstId']));
+
+					$v = $query->result_array();
+					$visit = $v[0]['vstDate'];
+
+					$fecha = date($visit);
+					$nuevafecha = strtotime ( '+'.$dias.' day' , strtotime ( $fecha ) ) ;
+					$nuevafecha = date ( 'Y-m-d H:i:s' , $nuevafecha );
+
+					$insert = array(
+						   'vstDate' => $nuevafecha,
+						   'cliId' => $data['cliId'],
+						   'vstStatus' => 'PN',
+						   'vstNote' => $data['note']
+						);
+
+					if($this->db->insert('admvisits', $insert) == false) {
+						return false;
+					}else{
+						$fecha = explode(' ', $nuevafecha);
+						$dia = explode('-', $fecha[0]);
+						$hora = explode(':', $fecha[1]);
+						$visita_ = "<br> y se programo la visita para el día <br>".$dia[2].'-'.$dia[1].'-'.$dia[0]." a las ".$hora[0].":".$hora[1];
+					}
+				}
+				//------------------
+				$id=str_pad($id, 10, "0", STR_PAD_LEFT);
+				return "Se registro el pago con el número de operación ".$id." ".$visita_;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 	
 }

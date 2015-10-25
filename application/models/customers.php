@@ -283,6 +283,40 @@ class Customers extends CI_Model
 			}
 		}
 	}
+
+	function status($data = null){
+		if($data == null)
+		{
+			return false;
+		}
+		else
+		{
+			$vstId = $data['id'];
+
+			$this->db->select('cliId, vstNote');
+			$query = $this->db->get_where('admvisits', array('vstId'=>$vstId));
+			$id = $query->result_array();
+			$cliId = $id[0]['cliId'];
+			$note = $id[0]['vstNote'];
+			
+			$data = array();
+			$this->db->select('admcustomers.cliId, admcustomers.cliName, admcustomers.cliLastName, IF((sum(admcredits.crdDebe) - sum(admcredits.crdHaber) ) IS NULL, 0 ,(sum(admcredits.crdDebe) - sum(admcredits.crdHaber) )) as balance, admcustomers.cliImagePath,  '.$vstId.' as vstId , admcustomers.cliAddress, \''.$note.'\' as note ');
+			$this->db->from('admcustomers');
+			$this->db->join('admcredits', ' admcredits.cliId = admcustomers.cliId', 'left');	
+			$this->db->where('admcustomers.cliId', $cliId);
+			$this->db->group_by("admcustomers.cliId"); 
+			$query= $this->db->get();
+
+			if ($query->num_rows() != 0)
+			{
+			 	return $query->result_array();
+			}
+			else
+			{
+				return [];
+			}
+		}
+	}
 	
 }
 ?>

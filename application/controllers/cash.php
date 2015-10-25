@@ -41,4 +41,16 @@ class cash extends CI_Controller {
 
 		echo json_encode($response);
 	}
+
+	public function setPay(){
+		$data = $this->Cashs->setPay($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);	
+		}
+	}
 }

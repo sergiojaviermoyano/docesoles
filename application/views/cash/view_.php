@@ -28,6 +28,7 @@ if($data['read'] == true){
 	<div class="col-xs-9">
       <select class="form-control select2" id="cliId" style="width: 100%;" <?php echo ($data['read'] == true ? 'disabled="disabled"' : '');?>>
         <?php 
+          echo '<option value="-1" selected></option>';
           foreach ($data['customers'] as $c) {
             echo '<option value="'.$c['cliId'].'" '.($data['motion']['cliId'] == $c['cliId'] ? 'selected' : '').'>'.$c['cliLastName'].', '.$c['cliName'].'</option>';
           }

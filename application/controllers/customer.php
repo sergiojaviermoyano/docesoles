@@ -46,4 +46,11 @@ class customer extends CI_Controller {
 			echo json_encode($data);	
 		}
 	}
+
+	public function status(){
+		$data['data'] = $this->Customers->status($this->input->post());
+		$response['html'] = $this->load->view('calendar/status_', $data, true);
+
+		echo json_encode($response);
+	}
 }

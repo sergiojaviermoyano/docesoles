@@ -83,7 +83,7 @@
 
 <!-- indicador de carga -->
   <div class="waiting" id="waiting">
-      <div style="top: 45%; left: 45%; position: inherit;">
+      <div style="top: 45%; left: 45%; position: fixed;">
           <!--<div class="progress progress active">
             <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
           </div>-->
@@ -109,7 +109,7 @@
   {
     background-color: black;
     display: block;
-    position: absolute;
+    position: fixed;
     z-index: 50000;
     overflow: auto;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";

@@ -75,13 +75,11 @@
                   url: 'index.php/dash/setVisit', 
                   success: function(result){
                                 WaitingClose();
-                                //$("#modalBodyProgrammer").html(result.html);
-                                //$('#vstFecha').datepicker({minDate: '0'});
-                                //setTimeout("$('#modalProgrammer').modal('show');",800);
-                                //$(".select2").select2();
-                                WaitingClose();
                                 $('#modalProgrammer').modal('hide');
                                 $('#calendar').fullCalendar('refetchEvents');
+
+                                $("#modalResultValue").html(result);
+                                setTimeout("$('#modalResult').modal('show');",1000);
                         },
                   error: function(result){
                         WaitingClose();
@@ -90,6 +88,71 @@
                   dataType: 'json'
               });
 
+        });
+
+        $("#btnSavePay").click(function(){
+
+          $('#error_s').fadeOut('slow');
+          var hayError = false;
+            if($('#statusPrice').val() == "")
+            {
+              hayError = true;
+            }
+
+            if(hayError == true){
+              $('#error_s').fadeIn('slow');
+              return;
+            }
+
+            WaitingOpen('Registrando Pago');
+            $.ajax({
+                  type: 'POST',
+                  data: {
+                          cliId: $('#cliId').val(),
+                          vstId: $('#vstId').val(),
+                          price: $('#statusPrice').val(),
+                          note: $('#statusNote').val()
+                        },
+                  url: 'index.php/cash/setPay', 
+                  success: function(result){
+                                WaitingClose();
+                                $('#modalPay').modal('hide');
+                                $('#calendar').fullCalendar('refetchEvents');
+
+                                $("#modalResultValue").html(result);
+                                setTimeout("$('#modalResult').modal('show');",1000);
+                        },
+                  error: function(result){
+                        WaitingClose();
+                        alert("error");
+                      },
+                  dataType: 'json'
+              });
+        });
+
+        $("#btnVisted").click(function(){
+
+            WaitingOpen('Registrando Operación');
+            $.ajax({
+                  type: 'POST',
+                  data: {
+                          vstId: $('#vstId').val()
+                        },
+                  url: 'index.php/dash/cancelVisit', 
+                  success: function(result){
+                                WaitingClose();
+                                $('#modalPay').modal('hide');
+                                $('#calendar').fullCalendar('refetchEvents');
+
+                                $("#modalResultValue").html(result);
+                                setTimeout("$('#modalResult').modal('show');",1000);
+                        },
+                  error: function(result){
+                        WaitingClose();
+                        alert("error");
+                      },
+                  dataType: 'json'
+              });
         });
         /* initialize the external events
          -----------------------------------------------------------------*/
@@ -171,7 +234,23 @@
                   });
               },
           eventClick: function(event) {
-              alert("ok" + event.id);
+              //alert("ok" + event.id);
+              WaitingOpen('Cargando Cliente');
+              $.ajax({
+                      url: 'index.php/customer/status',
+                      data: { id: event.id },
+                      dataType: 'json',
+                      type: 'POST',
+                      success: function(result) {
+                          $("#modalBodyPay").html(result.html);
+                          setTimeout("$('#modalPay').modal('show')",800);
+                          WaitingClose();
+                      },
+                      error: function(doc) {
+                        WaitingClose();
+                        alert("Error:" + doc);
+                      }
+                  });
           },
 
           editable: true,
@@ -252,6 +331,44 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" id="btnSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPay" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span id="modalAction_2"><i class="fa fa-fw fa-money" style="color: green;"></i></span>  Registar Pago</h4> 
+      </div>
+      <div class="modal-body" id="modalBodyPay">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left" id="btnVisted">Visitado</button>
+        <!--<button type="button" class="btn btn-warning pull-left" id="btnReProgram">Reprogramar</button>-->
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSavePay">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalResult" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span><i class="fa fa-fw fa-bell" style="color: #f39c12 !important"></i></span> Resultado</h4> 
+      </div>
+      <div class="modal-body" id="modalBodyResult" style="text-align:center;">
+        <h3 id="modalResultValue"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

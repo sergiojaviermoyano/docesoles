@@ -16,7 +16,7 @@
             <thead>
               <tr>
                 <th width="20%">Acciones</th>
-                <th>Código</th>th>
+                <th>Código</th>
                 <th>Descripción</th>
                 <th>P. Costo</th>
                 <th>P. Venta</th>
