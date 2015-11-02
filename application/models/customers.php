@@ -268,8 +268,8 @@ class Customers extends CI_Model
 			$this->db->join('admcustomers', 'admcustomers.cliId = admvisits.cliId');
 			$this->db->where('admvisits.vstStatus','PN'); // Set Filter		
 			$this->db->where('month(admvisits.vstDate)', $month);
-			$this->db->or_where('month(admvisits.vstDate)', $data['month']);
-			$this->db->or_where('month(admvisits.vstDate)', ($month+1));
+			$this->db->or_where('month(admvisits.vstDate) = '.$data['month'].' and admvisits.vstStatus = \'PN\'' );
+			$this->db->or_where('month(admvisits.vstDate) = '.($month+1).' and admvisits.vstStatus = \'PN\'');
 
 			$query= $this->db->get();
 			
