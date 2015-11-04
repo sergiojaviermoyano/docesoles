@@ -36,6 +36,35 @@ class Calendar extends CI_Model
 		}
 	}
 
+	function setReprogramVisit($data = null){
+		if($data == null)
+		{
+			return false;
+		}
+		else
+		{
+			$vstId = $data['vstId'];
+			$dia = $data['dia'];
+			$hora = $data['hora'];
+			$min = $data['min'];
+			$note = $data['note'];
+			
+			$dia = explode('-', $dia);
+
+			$update = array(
+				   'vstDate' => $dia[2].'-'.$dia[1].'-'.$dia[0].' '.$hora.':'.$min,
+				   'vstStatus' => 'PN',
+				   'vstNote' => $note
+				);
+
+			if($this->db->update('admvisits', $update, array('vstId'=>$vstId)) == false) {
+				return false;
+			}else{
+				return "Se re-programo la visita para el día <br>".$data['dia']." a las ".$data['hora'].":".$data['min'];
+			}
+		}
+	}
+
 	function cancelVisit($data = null){
 		if($data == null)
 			{

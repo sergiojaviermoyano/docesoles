@@ -37,8 +37,28 @@ class dash extends CI_Controller {
 		echo json_encode($response);
 	}
 
+	public function getCustommerReprogram()
+	{
+		$data['customer'] = $this->Customers->status($this->input->post());
+		$response['html'] = $this->load->view('calendar/reprogramer_', $data, true);	
+
+		echo json_encode($response);
+	}
+
 	public function setVisit(){
 		$data = $this->Calendar->setVisit($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);	
+		}
+	}
+
+	public function setReprogramVisit(){
+		$data = $this->Calendar->setReprogramVisit($this->input->post());
 		if($data  == false)
 		{
 			echo json_encode(false);

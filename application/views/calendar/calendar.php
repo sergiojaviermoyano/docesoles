@@ -22,7 +22,6 @@
              //Cargar clientes
              //Elegir fecha y hora(de mañana para adelante )
              //Registrar visita
-             //alert(this.id);
             LoadIconAction('modalAction','Program');
             WaitingOpen('Cargando Clientes');
               $.ajax({
@@ -44,6 +43,37 @@
                 });
          });
 
+        var reprogramIdVisit = 0;
+        $('#btnReprogram').click(function(){
+          reprogramIdVisit = 0;
+          reprogramIdVisit = $('#vstId').val();
+          LoadIconAction('modalAction_3','ReProgram');
+          $('#modalPay').modal('hide');
+          WaitingOpen('Cargando Clientes');
+              $.ajax({
+                    type: 'POST',
+                    data: {
+                            id: $('#vstId').val()
+                        },  
+                    url: 'index.php/dash/getCustommerReprogram', 
+                    success: function(result){
+                                  WaitingClose();
+                                  $("#modalBodyReProgram").html(result.html);
+                                  $('#vstFecha_').datepicker({minDate: '0'});
+                                  setTimeout("$('#modalReprogram').modal('show');",800);
+                          },
+                    error: function(result){
+                          WaitingClose();
+                          alert(result);
+                        },
+                    dataType: 'json'
+                });
+        });
+        /*
+        $('#btnReprogram_').click(function(){
+          alert('ok');
+        });
+        */
         $('#btnSave').click(function(){
             
             var hayError = false;
@@ -150,6 +180,45 @@
                   error: function(result){
                         WaitingClose();
                         alert("error");
+                      },
+                  dataType: 'json'
+              });
+        });
+
+        $('#btnSaveReprogram').click(function(){
+            var hayError = false;
+            if($('#vstFecha_').val() == "")
+            {
+              hayError = true;
+            }
+
+            if(hayError == true){
+              $('#error').fadeIn('slow');
+              return;
+            }
+            
+            WaitingOpen('Reprogramando Visita');
+            $.ajax({
+                  type: 'POST',
+                  data: {
+                          dia: $('#vstFecha_').val(),
+                          hora: $('#vstHora_').val(),
+                          min: $('#vstMinutos_').val(),
+                          note: $('#vstNote_').val(),
+                          vstId: reprogramIdVisit
+                        },
+                  url: 'index.php/dash/setReprogramVisit', 
+                  success: function(result){
+                                WaitingClose();
+                                $('#modalReprogram').modal('hide');
+                                $('#calendar').fullCalendar('refetchEvents');
+
+                                $("#modalResultValue").html(result);
+                                setTimeout("$('#modalResult').modal('show');",1000);
+                        },
+                  error: function(result){
+                        WaitingClose();
+                        alert(result);
                       },
                   dataType: 'json'
               });
@@ -348,6 +417,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger pull-left" id="btnVisted">Visitado</button>
+        <button type="button" class="btn btn-success pull-left" id="btnReprogram">Reprogramar</button>
         <!--<button type="button" class="btn btn-warning pull-left" id="btnReProgram">Reprogramar</button>-->
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" id="btnSavePay">Guardar</button>
@@ -369,6 +439,24 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalReprogram" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span id="modalAction_3"></span>  Visita</h4> 
+      </div>
+      <div class="modal-body" id="modalBodyReProgram">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSaveReprogram">Guardar</button>
       </div>
     </div>
   </div>

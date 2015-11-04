@@ -37,6 +37,10 @@ function LoadIconAction(idTag, action){
 			icon = '<i class="fa fa-fw fa-clock-o" style="color: #D81B60"></i>';
 			actt = 'Programar ';
 			break;
+		case 	'ReProgram':
+			icon = '<i class="fa fa-fw fa-clock-o" style="color: #D81B60"></i>';
+			actt = 'Re-Programar ';
+			break;
 	}
 
 	$('#'+idTag).html(icon + actt);

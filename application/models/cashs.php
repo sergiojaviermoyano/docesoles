@@ -213,7 +213,8 @@ class Cashs extends CI_Model
 						$fecha = explode(' ', $nuevafecha);
 						$dia = explode('-', $fecha[0]);
 						$hora = explode(':', $fecha[1]);
-						$visita_ = "<br> y se programo la visita para el día <br>".$dia[2].'-'.$dia[1].'-'.$dia[0]." a las ".$hora[0].":".$hora[1];
+						$visita_ = '<br> y se programo la visita para el día <br>'.$dia[2].'-'.$dia[1].'-'.$dia[0].' a las '.$hora[0].':'.$hora[1].'<br>';
+						//$visita_.= '<center><button type="button" class="btn btn-success pull-left" id="btnReprogram_">Reprogramar</button></center><br>';
 					}
 				}
 				//------------------

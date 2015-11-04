@@ -26,6 +26,7 @@
             <thead>
               <tr>
                 <th width="10%">Acciones</th>
+                <th>Número</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
                 <th>Descripción</th>
@@ -53,6 +54,7 @@
   	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('.$m['crdId'].',\'View\')"></i>';
                     }
   	                echo '</td>';
+                    echo '<td>'.str_pad($m['crdId'], 10, "0", STR_PAD_LEFT).'</td>';
                     $date = date_create($m['crdDate']);
                     //echo date_format($date, 'Y-m-d H:i:s');
                     echo '<td style="text-align: center">'.date_format($date, 'd-m-Y H:i').'</td>';
