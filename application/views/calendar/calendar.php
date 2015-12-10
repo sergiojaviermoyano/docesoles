@@ -11,6 +11,7 @@
             </div><!-- /.col -->
             <div class="col-md-2">
               <button class="btn btn-block btn-success" style="width: 100px; margin-top: 10px;" data-toggle="modal" id="btnAdd">Programar</button>
+              <button class="btn btn-block btn-info" style="width: 100px; margin-top: 10px;" data-toggle="modal" id="btnNew">Venta</button>
             </div>
           </div><!-- /.row -->
         </section><!-- /.content -->
@@ -24,6 +25,7 @@
              //Registrar visita
             LoadIconAction('modalAction','Program');
             WaitingOpen('Cargando Clientes');
+            return;
               $.ajax({
                     type: 'POST',
                     data: null,
@@ -42,6 +44,140 @@
                     dataType: 'json'
                 });
          });
+
+        var pedido = [];
+
+        $('#btnNew').click(function(){
+            pedido = [];
+            LoadIconAction('modalAction_4','Add');
+            WaitingOpen('Cargando Datos');
+            $.ajax({
+                    type: 'POST',
+                    data: null,
+                    url: 'index.php/dash/getSaleData', 
+                    success: function(result){
+                                  WaitingClose();
+                                  $("#modalBodySale").html(result.html);
+                                  setTimeout("$('#modalSale').modal('show');",800);
+                                  $(".select2").select2();
+                                  $('#cliId_s').change(function(){
+                                    //Saldo
+                                    var importe = $(this).children('option:selected').data('balance');
+                                    if(importe < 0){
+                                      $('#textBalance').html('<i class="fa fa-fw fa-plus" style="color: #00a65a"></i>');
+                                      $('#importBalance').html(importe.replace('-',''));
+                                    }
+                                    else{
+                                      if(importe == 0){
+                                        $('#textBalance').html('<i class="fa fa-fw fa-check" style="color: #3c8dbc"></i>');
+                                        $('#importBalance').html(importe);
+                                      }
+                                      else{
+                                        $('#textBalance').html('<i class="fa fa-fw fa-minus" style="color: #dd4b39"></i>');
+                                        $('#importBalance').html(importe);
+                                      }
+                                    }
+
+                                    //Dni
+                                    $('#dniNumber').html($(this).children('option:selected').data('dni'));
+
+                                    //Address
+                                    $('#address').html($(this).children('option:selected').data('address'));
+                                  });
+                                  $('#prodId_s').change(function(){
+                                      //price
+                                      var price = $(this).children('option:selected').data('price');
+                                      var margin = $(this).children('option:selected').data('margin');
+                                      var coste = parseFloat(price) + (parseFloat(price) * (parseFloat(margin) / 100));
+                                      $('#prodPrice').html(coste.toFixed(2));
+                                  });
+                                  //Fecha
+                                  $('#vstFecha__s').datepicker({minDate: '0'});
+                                  $('#addProduct').click(function(){
+                                    //validar
+
+                                    //Agregar objeto
+                                    var band = false;
+                                    for( var i = 0 ; i < pedido.length ; i++ ){
+                                      if(pedido[i]['prodId'] == $('#prodId_s').val()){
+                                        band = true;
+                                        pedido[i]['prodCant'] += parseInt($('#cant_').val());
+                                      }
+                                    }
+
+                                    if(band == false){
+                                      var product = {
+                                            'prodId'    : $('#prodId_s').val(),
+                                            'prodDesc'  : $('#prodId_s option:selected').text(),
+                                            'prodPrice' : $('#prodPrice').html(),
+                                            'prodCant'  : parseInt($('#cant_').val())
+                                      };
+                                      pedido.push(product);
+                                    }
+
+                                    ArmarPedido();
+
+                                    $('#cant_').val('1');
+                                  });
+
+                                  $('#sum').click(function(){
+                                      var cant = parseInt($('#cant_').val());
+                                      cant++;
+                                      $('#cant_').val(cant);
+                                  });
+
+                                  $('#sub').click(function(){
+                                      var cant = parseInt($('#cant_').val());
+                                      cant--;
+                                      if(cant <= 0){
+                                        $('#cant_').val('1');
+                                      } else {
+                                        $('#cant_').val(cant);}
+                                  });
+                          },
+                    error: function(result){
+                          WaitingClose();
+                          alert(result);
+                        },
+                    dataType: 'json'
+                });
+        });
+
+        function ArmarPedido(){
+          //Limpiar body de la tabla
+          $('#products > tbody').html('');
+          
+          //Insertar todos los articulos nuevamente
+          var rows = '';
+          var total = 0;
+          $('#total').html(parseFloat(total).toFixed(2));
+          $.each(pedido, function(idx, obj){ 
+              rows += '<tr>';
+              rows += '<td><i class="fa fa-times remove" style="color: red" id="'+obj['prodId']+'"></i></td>';
+              rows += '<td>'+obj['prodDesc']+'</td>';
+              rows += '<td>'+obj['prodPrice']+'</td>';
+              rows += '<td>'+obj['prodCant']+'</td>';
+              var importe = parseInt(obj['prodCant']) * parseFloat(obj['prodPrice']).toFixed(2)
+              rows += '<td>'+importe.toFixed(2)+'</td>';
+              rows += '</tr>';
+              total = parseFloat(total) + parseFloat(importe);
+              $('#total').html(parseFloat(total).toFixed(2));
+          });
+          $("#products > tbody ").append(rows);
+
+          $('.remove').click(function(e){
+
+            var indice = 0;
+            for( var i = 0 ; i < pedido.length ; i++ ){
+              if(pedido[i]['prodId'] == $(this).get(0).id){
+                indice = i;
+                break;
+              }
+            }
+            pedido.splice(indice,1);
+            ArmarPedido();
+          });
+        }
 
         var reprogramIdVisit = 0;
         $('#btnReprogram').click(function(){
@@ -69,11 +205,6 @@
                     dataType: 'json'
                 });
         });
-        /*
-        $('#btnReprogram_').click(function(){
-          alert('ok');
-        });
-        */
         $('#btnSave').click(function(){
             
             var hayError = false;
@@ -222,6 +353,60 @@
                       },
                   dataType: 'json'
               });
+        });
+
+        $('#btnSaveSale').click(function(){
+          var hayError = false;
+            
+            if($('#cliId_s').val() == -1)
+            {
+              hayError = true;
+            }
+
+            if(pedido.length <= 0){
+              hayError = true;
+            }
+
+            if($('#vstFecha__s').val() == ''){
+              hayError = true; 
+            }
+
+            if(hayError == true){
+              $('#error_s').fadeIn('slow');
+              setTimeout("$('#error_s').fadeOut('slow');",3000);
+              return;
+            }
+
+            var aCuenta = 0;
+            if($('#to_acount').val() != ''){
+              aCuenta = parseFloat($('#to_acount').val());
+            }
+            WaitingOpen('Registrando Compra');
+
+            $.ajax({
+                  type: 'POST',
+                  data: {
+                          cliId: $('#cliId_s').val(),
+                          ped: pedido,
+                          aCuent: aCuenta,
+                          fecha: $('#vstFecha__s').val(),
+                          hora: $('#vstHora__s').val(),
+                          min: $('#vstMinutos__s').val(),
+                          note: $('#vstNote__s').val()
+                        },
+                  url: 'index.php/dash/setSale', 
+                  success: function(result){
+                                WaitingClose();
+                                $('#modalSale').modal('hide');
+                                $('#calendar').fullCalendar('refetchEvents');
+                        },
+                  error: function(result){
+                        WaitingClose();
+                        alert(result);
+                      },
+                  dataType: 'json'
+              });
+          //alert("venta");
         });
         /* initialize the external events
          -----------------------------------------------------------------*/
@@ -457,6 +642,24 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" id="btnSaveReprogram">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSale" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span id="modalAction_4"></span>  Venta</h4> 
+      </div>
+      <div class="modal-body" id="modalBodySale">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSaveSale">Guardar</button>
       </div>
     </div>
   </div>

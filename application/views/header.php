@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <title>Doce Soles</title>
+    <link rel="shortcut icon" href="<?php  echo base_url();?>assets/facturas y targetas/logo.png" type="image/x-icon">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/font-awesome.min.css"> -->
     <!-- Theme style -->
     <link rel="stylesheet" href="<?php  echo base_url();?>assets/css/AdminLTE.min.css">
@@ -107,19 +108,19 @@
 <style>
   .waiting
   {
-    background-color: black;
+    background: none;
     display: block;
     position: fixed;
     z-index: 50000;
     overflow: auto;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    opacity: 0.5;
     bottom: 0;
     left: 0;
     right: 0;
     top: 0;
     display: none;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000); /* AA, RR, GG, BB */
+    /*CSS3*/
+    background:rgba(0,0,0,0.5); /*0.5 De Transparencia*/
   }
 </style>
 

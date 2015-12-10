@@ -8,3 +8,7 @@
       
 
   </body>
+  <script>
+  	//Esto dispara un evento para que se cargue el calendario en forma automatica cuando ingreso.
+  	cargarView('dash', 'calendar', '');
+  </script>

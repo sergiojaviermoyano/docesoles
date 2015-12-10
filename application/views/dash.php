@@ -1,4 +1,4 @@
-<body class="skin-blue sidebar-mini">
+<body class="skin-yellow sidebar-mini">
     <div class="wrapper">
 
       <header class="main-header">

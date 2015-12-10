@@ -25,7 +25,6 @@ class dash extends CI_Controller {
 
 	public function calendar()
 	{
-		//$data['visits'] = $this->Customers->visits();
 		$this->load->view('calendar/calendar');
 	}
 
@@ -80,5 +79,25 @@ class dash extends CI_Controller {
 			echo json_encode($data);	
 		}
 	}
+
+	public function getSaleData(){
+		$data = $this->Calendar->getSaleData();
+		$response['html'] = $this->load->view('calendar/sale_', $data, true);	
+
+		echo json_encode($response);
+	}
+
+	public function setSale(){
+		$data = $this->Calendar->setSale($this->input->post());
+		if($data  == false)
+		{
+			echo json_encode(false);
+		}
+		else
+		{
+			echo json_encode($data);	
+		}
+	}
+
 
 }
