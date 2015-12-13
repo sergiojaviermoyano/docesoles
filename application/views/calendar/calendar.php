@@ -25,7 +25,6 @@
              //Registrar visita
             LoadIconAction('modalAction','Program');
             WaitingOpen('Cargando Clientes');
-            return;
               $.ajax({
                     type: 'POST',
                     data: null,
