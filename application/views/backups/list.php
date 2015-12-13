@@ -19,7 +19,7 @@
 
           <br>
 
-          <a class="btn btn-primary" href="assets/backs/db-backup-last.sql" download style="display: none" id="btn_back">
+          <a class="btn btn-primary" href="assets/backs/db-backup-last.gz" download style="display: none" id="btn_back">
             <i class="fa fa-fw fa-download"></i>
             Descargar Copia de Seguridad
           </a>
@@ -44,7 +44,8 @@ function GenerarBackup(){
                             },
                     error: function(){
                               WaitingClose();
-                              alert("Error al generar el backup.");
+                              //alert("Error al generar el backup.");
+                              $('#btn_back').show('slow');
                             },
                     dataType: 'json'
                   };

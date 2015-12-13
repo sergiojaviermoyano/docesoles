@@ -24,6 +24,7 @@ class Backups extends CI_Model
 	}
 
 	function Backup_Generate(){
+		/*
 		$user="root";
 		$pass="";
 		$host="localhost";
@@ -83,7 +84,20 @@ class Backups extends CI_Model
 		$handle = fopen('assets/backs/db-backup-last.sql','w+');
 		fwrite($handle,$return);
 		fclose($handle);
-		
+		*/
+
+		$this->load->dbutil();
+
+		// Crea una copia de seguridad de toda la base de datos y la asigna a una variable
+		$copia_de_seguridad = &$this->dbutil->backup(); 
+
+		// Carga el asistente de archivos y escribe el archivo en su servidor
+		$this->load->helper('file');
+		write_file('assets/backs/db-backup-last.gz', $copia_de_seguridad); 
+
+		// Carga el asistente de descarga y envía el archivo a su escritorio
+		//$this->load->helper('download');
+		//force_download('copia_de_seguridad.gz', $copia_de_seguridad);
 
 		return true;
 	}
