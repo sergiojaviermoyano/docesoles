@@ -11,7 +11,7 @@
             <div class="col-xs-1">
                 <label style="margin-top: 7px;">Desde <strong style="color: #dd4b39">*</strong>: </label>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <input type="text" class="form-control" placeholder="dd/mm/aaaa" id="dtDesde" readonly="">
             </div>
           </div>
@@ -20,7 +20,7 @@
             <div class="col-xs-1">
                 <label style="margin-top: 7px;">Hasta <strong style="color: #dd4b39">*</strong>: </label>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 <input type="text" class="form-control" placeholder="dd/mm/aaaa" id="dtHasta" readonly="">
             </div>
           </div>
