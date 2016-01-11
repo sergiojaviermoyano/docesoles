@@ -46,10 +46,11 @@
                     if (strpos($permission,'Edit') !== false) {
   	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'Edit\')"></i>';
                     }
-                    if (strpos($permission,'Del') !== false) {
-  	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'Del\')"></i>';
-                    }
                     */
+                    if (strpos($permission,'Del') !== false) {
+  	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('.$m['crdId'].',\'Del\')"></i>';
+                    }
+                    
                     if (strpos($permission,'View') !== false) {
   	                	echo '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('.$m['crdId'].',\'View\')"></i>';
                     }

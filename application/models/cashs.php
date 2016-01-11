@@ -114,6 +114,13 @@ class Cashs extends CI_Model
 						return false;
 					} 
 					break;
+
+				case 'Del':
+					//Eliminar movimiento
+					if($this->db->delete('admcredits', array('crdId'=>$id)) == false) {
+						return false;
+					}
+					break;
 			}
 			return true;
 
