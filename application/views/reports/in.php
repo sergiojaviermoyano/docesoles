@@ -37,6 +37,7 @@
             <div class="col-xs-5" style="min-height: 100px;">
                 <label>Total Ingresos</label>
                 <h2 id="total">0.00</h2>
+                <a href="assets/reports/reporteDeIngresos.pdf" id="linkDownload" download style="display: none;">Descargar en formato PDF<i class="fa fa-fw fa-file-pdf-o" style="color: red"></i></a>
             </div>
           </div>
         </div><!-- /.box-body -->
@@ -77,6 +78,7 @@
                       }else{
                         $('#total').html('0.00');
                       }
+                      $('#linkDownload').show();
     					},
     		error: function(result){
     					WaitingClose();

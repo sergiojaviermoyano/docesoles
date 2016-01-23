@@ -187,20 +187,24 @@
   		return;
   	}
 
+debugger;
   	var hayError = false;
-    if($('#crdDescription').val() == '')
+    if(acCrd != 'Del')
     {
-    	hayError = true;
-    }
+      if($('#crdDescription').val() == '')
+      {
+      	hayError = true;
+      }
 
-    if($('#crdNote').val() == '')
-    {
-      hayError = true;
-    }
+      if($('#crdNote').val() == '')
+      {
+        hayError = true;
+      }
 
-    if($('#crdDebe').val() == '' && $('#crdHaber').val() == '')
-    {
-      hayError = true;
+      if($('#crdDebe').val() == '' && $('#crdHaber').val() == '')
+      {
+        hayError = true;
+      }
     }
 
     if(hayError == true){
