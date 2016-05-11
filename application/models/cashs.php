@@ -8,18 +8,96 @@ class Cashs extends CI_Model
 		parent::__construct();
 	}
 	
-	function Cashs_List(){
+	function Cashs_List($data_ = null){
+		$data = array();
+		if($data_ == null){
+			$this->db->select('admcredits.*, admcustomers.cliName, admcustomers.cliLastName, sisusers.usrNick ');
+			$this->db->from('admcredits');
+			$this->db->join('admcustomers', 'admcustomers.cliId = admcredits.cliId');
+			$this->db->join('sisusers', ' sisusers.usrId = admcredits.usrId');
+			$this->db->order_by('admcredits.crdId', 'desc');
+			$this->db->limit(10);
+			$query= $this->db->get();
+			$data['page'] = 1;
+			$data['totalPage'] = ceil($this->db->count_all_results('admcredits') / 10);
+			$data['data'] = $query->result_array();
+			
+		} else {
+			$this->db->select('admcredits.*, admcustomers.cliName, admcustomers.cliLastName, sisusers.usrNick ');
+			$this->db->from('admcredits');
+			$this->db->join('admcustomers', 'admcustomers.cliId = admcredits.cliId');
+			$this->db->join('sisusers', ' sisusers.usrId = admcredits.usrId');
+			$this->db->order_by('admcredits.crdId', 'desc');
+			$this->db->or_like('admcredits.crdId', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDate', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDescription', $data_['txt']); 
+			$this->db->or_like('admcustomers.cliLastName', $data_['txt']); 
+			$this->db->or_like('admcustomers.cliName', $data_['txt']); 
+			$this->db->or_like('sisusers.usrNick', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDebe', $data_['txt']); 
+			$this->db->or_like('admcredits.crdHaber', $data_['txt']); 
+			$this->db->limit(10, (($data_['page'] - 1) * 10));
+			$query= $this->db->get();
+			$data['page'] = $data_['page'];
+			$data['data'] = $query->result_array();
 
-		$this->db->select('admcredits.*, admcustomers.cliName, admcustomers.cliLastName, sisusers.usrNick ');
+			$this->db->select('admcredits.*, admcustomers.cliName, admcustomers.cliLastName, sisusers.usrNick ');
+			$this->db->from('admcredits');
+			$this->db->join('admcustomers', 'admcustomers.cliId = admcredits.cliId');
+			$this->db->join('sisusers', ' sisusers.usrId = admcredits.usrId');
+			$this->db->order_by('admcredits.crdId', 'desc');
+			$this->db->or_like('admcredits.crdId', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDate', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDescription', $data_['txt']); 
+			$this->db->or_like('admcustomers.cliLastName', $data_['txt']); 
+			$this->db->or_like('admcustomers.cliName', $data_['txt']); 
+			$this->db->or_like('sisusers.usrNick', $data_['txt']); 
+			$this->db->or_like('admcredits.crdDebe', $data_['txt']); 
+			$this->db->or_like('admcredits.crdHaber', $data_['txt']); 
+			$query= $this->db->get();
+
+			$data['totalPage'] = ceil($query->num_rows() / 10);
+		}
+		
+		return $data;
+	}
+
+	function Cashs_List_Pagination($data_){ 
+		/*
+		$filter = array(
+				'start'		=> $_REQUEST['start'],
+				'length'	=> $_REQUEST['length'],
+				'order'		=> $_REQUEST['order'][0],
+				'search'	=> $_REQUEST['search'],
+			);
+		*/
+
+		$this->db->select("admcredits.crdId as id, admcredits.crdId as code, admcredits.crdDate as date, admcredits.crdDescription as description, CONCAT((admcustomers.cliName),(' '),(admcustomers.cliLastName)) as customer, sisusers.usrNick as user, admcredits.crdDebe as debe, admcredits.crdHaber as haber");
 		$this->db->from('admcredits');
 		$this->db->join('admcustomers', 'admcustomers.cliId = admcredits.cliId');
 		$this->db->join('sisusers', ' sisusers.usrId = admcredits.usrId');
-		
+		$this->db->like('admcredits.crdId', $data_['search']['value']); 
+		$this->db->or_like('admcredits.crdDate', $data_['search']['value']); 
+		$this->db->or_like('admcredits.crdDescription', $data_['search']['value']); 
+		$this->db->or_like('admcustomers.cliLastName', $data_['search']['value']); 
+		$this->db->or_like('admcustomers.cliName', $data_['search']['value']); 
+		$this->db->or_like('sisusers.usrNick', $data_['search']['value']); 
+		$this->db->or_like('admcredits.crdDebe', $data_['search']['value']); 
+		$this->db->or_like('admcredits.crdHaber', $data_['search']['value']); 
+		$this->db->limit($data_['length'], $data_['start']);
+
 		$query= $this->db->get();
+		//echo $this->db->last_query();
 
 		if ($query->num_rows()!=0)
 		{
-			return $query->result_array();	
+			$data = array();
+  			$data['recordsTotal'] = $query->num_rows();//$this->db->count_all_results('admcredits');
+  			$data['recordsFiltered'] = $this->db->count_all_results('admcredits');
+			$data['aaData'] = $query->result_array();	
+			$data['draw'] = $data_['start'] + 1;
+			return $data;
+			//return $query->result_array();	
 		}
 		else
 		{	

@@ -33,6 +33,18 @@ class report extends CI_Controller {
 		echo json_encode($data);
 	}
 	
+	public function sl($permission)
+	{
+		$data['list'] = $this->Reports->reports_List();
+		$data['permission'] = $permission;
+		return $this->load->view('reports/sl', $data);
+	}
+
+	public function slajax()
+	{
+		$data = $this->Reports->reports_List();
+		echo json_encode($data);
+	}		
 	/*
 	public function getZone(){
 		$data['data'] = $this->Zones->getZone($this->input->post());

@@ -11,9 +11,26 @@ class cash extends CI_Controller {
 
 	public function index($permission)
 	{
-		$data['list'] = $this->Cashs->Cashs_List();
+		$data['list'] = $this->Cashs->Cashs_List($this->input->post());
 		$data['permission'] = $permission;
 		$this->load->view('cash/list', $data);
+	}
+
+	public function pagination()
+	{
+		echo json_encode($this->Cashs->Cashs_List($this->input->post()));
+	}
+
+	public function getMotioPagination(){
+		$filter = array(
+				'start'		=> $_REQUEST['start'],
+				'length'	=> $_REQUEST['length'],
+				'order'		=> $_REQUEST['order'][0],
+				'search'	=> $_REQUEST['search'],
+			);
+
+		//var_dump($filter);
+		echo json_encode($this->Cashs->Cashs_List_Pagination($filter)); 
 	}
 	
 	public function getMotion(){
