@@ -21,12 +21,23 @@
               </div>
             </div>
         </div><!-- /.box-header -->
+        <div class="box-header">
+            <div class="box-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" id="table_search" class="form-control pull-right" placeholder="Buscar">
+
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+            </div>
+        </div><br>
         <div class="box-body">
           <table id="credit" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th width="10%">Acciones</th>
-                <th>Número</th>
+                <th>Numero</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
                 <th>Descripción</th>
@@ -37,16 +48,12 @@
             </thead>
             <tbody>
               <?php
-                if(count($list) > 0) {                  
-                	foreach($list as $m)
+                if(count($list['data']) > 0) {                  
+                	foreach($list['data'] as $m)
       		        {
   	                echo '<tr>';
   	                echo '<td>';
-                    /*
-                    if (strpos($permission,'Edit') !== false) {
-  	                	echo '<i class="fa fa-fw fa-pencil" style="color: #f39c12; cursor: pointer; margin-left: 15px;" onclick="LoadStk('.$s['stkId'].',\'Edit\')"></i>';
-                    }
-                    */
+
                     if (strpos($permission,'Del') !== false) {
   	                	echo '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('.$m['crdId'].',\'Del\')"></i>';
                     }
@@ -71,12 +78,32 @@
                         echo $m['crdHaber'];
                     echo '</td>';
   	                echo '</tr>';
-                    
       		        }
                   
                 }
               ?>
             </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8" style="text-align: center" id="footerRow">
+                <?php 
+                if($list['page'] == 1){
+                  echo '<button type="button" class="btn btn-default disabled"><i class="fa fa-fw fa-backward"></i></button>';
+                } else {
+                  echo '<button type="button" class="btn btn-default" onclick="page('.($list['page'] - 1).')"><i class="fa fa-fw fa-backward"></i></button>';
+                }
+
+                echo '<span style="padding: 0px 15px">'.$list['page'].'   de   '.$list['totalPage'].'</span>';
+
+                if($list['page'] == $list['totalPage']){
+                  echo '<button type="button" class="btn btn-default disabled"><i class="fa fa-fw fa-forward"></i></button>';
+                } else {
+                  echo '<button type="button" class="btn btn-default" onclick="page('.($list['page'] + 1).')"><i class="fa fa-fw fa-forward"></i></button>';
+                }
+                ?>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div><!-- /.box-body -->
       </div><!-- /.box -->
@@ -85,9 +112,85 @@
 </section><!-- /.content -->
 
 <script>
+
+  $('#table_search').keyup(function(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code==13) {
+        e.preventDefault();
+    }
+
+    if (code == 32 || code == 13 || code == 188 || code == 186) {
+        page(1);
+    }
+  });
+
+
+  function page(p){
+  WaitingOpen('Cargando...');
+      $.ajax({
+            type: 'POST',
+            data: {
+              page: p,
+              txt: $('#table_search').val()
+            },
+            url: 'index.php/cash/pagination', 
+            success: function(result){
+                      WaitingClose();
+                      $('#credit > tbody').html('');
+                      $.each( result.data, function( key, value ) {
+                        var row = '';
+                        row += '<tr>';
+                        row += '<td>';
+                        row += '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('+value.crdId+',\'Del\')"></i>';
+                        row += '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('+value.crdId+',\'View\')"></i>';
+                        row += '</td>';
+                        row += '<td>'+("000000000"+value.crdId).slice(-10)+'</td>';
+                        var date = new Date(value.crdDate);
+                        //echo date_format($date, 'Y-m-d H:i:s');
+                        row += '<td style="text-align: center">'+("0"+date.getDate()).slice(-2)+'-'+("0"+date.getMonth()).slice(-2)+'-'+("0"+date.getFullYear()).slice(-2)+' '+("0"+date.getHours()).slice(-2)+':'+("0"+date.getMinutes()).slice(-2)+'</td>';
+                        row += '<td style="text-align: left">'+value.cliLastName+','+value.cliName+'</td>';
+                        row += '<td style="text-align: left">'+value.crdDescription+'</td>';
+                        row += '<td style="text-align: left">'+value.usrNick+'</td>';
+                        row += '<td style="text-align: right">';
+                        if(value.crdDebe > 0)
+                          row += value.crdDebe;
+                        row += '</td>';
+                        row += '<td style="text-align: right">';
+                        if(value.crdHaber > 0)
+                          row += value.crdHaber;
+                        row += '</td>';
+                        row += '</tr>';
+                        $('#credit > tbody').append(row);
+                      });
+                      
+                      var foot = '';
+                      if(result.page == 1){
+                        foot += '<button type="button" class="btn btn-default disabled"><i class="fa fa-fw fa-backward"></i></button>';
+                      } else {
+                        foot += '<button type="button" class="btn btn-default" onclick="page('+(parseInt(result.page) - 1)+')"><i class="fa fa-fw fa-backward"></i></button>';
+                      }
+
+                      foot += '<span style="padding: 0px 15px">'+result.page+'   de   '+result.totalPage+'</span>';
+
+                      if(result.page == result.totalPage){
+                        foot += '<button type="button" class="btn btn-default disabled"><i class="fa fa-fw fa-forward"></i></button>';
+                      } else {
+                        foot += '<button type="button" class="btn btn-default" onclick="page('+(parseInt(result.page) + 1)+')"><i class="fa fa-fw fa-forward"></i></button>';
+                      }
+                      $('#footerRow').html(foot);
+            },
+            error: function(result){
+              WaitingClose();
+              alert("error");
+            },
+            dataType: 'json'
+        });
+
+  }
   $(function () {
-    //$("#groups").DataTable();
-    $('#credit').DataTable({
+
+    //$('#credit').DataTable({
+      /*
       "paging": true,
       "lengthChange": true,
       "searching": true,
@@ -106,7 +209,76 @@
                 "sPrevious": "Ant."
               }
         }
+        */
+    //});
+    /*
+    var t = $('#credit').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "language": {
+            "lengthMenu": "Ver _MENU_ filas por página",
+            "zeroRecords": "No hay registros",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+            "sSearch": "Buscar:  ",
+            "sPaginationType": "full_numbers",
+            "oPaginate": {
+                "sNext": "Sig.",
+                "sPrevious": "Ant."
+              }
+        },
+      //"bProcessing": true,
+      "bServerSide": true,
+      "columns": [
+                    {data:"id"},
+                    {data:"code"},
+                    {data:"date"},
+                    {data:"customer"},
+                    {data:"description"},
+                    {data:"user"},
+                    {data:"debe"},
+                    {data:"haber"}
+                ],
+      
+      "ajax":{
+          url : 'index.php/cash/getMotioPagination', // json datasource
+          pages: 1,
+          type: "post",  // method  , by default get
+          error: function(){  // error handling
+              alert("error");
+          }
+      },
+      //"sPaginationType": "full_numbers",
+      /*
+      "columnDefs": [ {
+        "targets": 0,
+        "data": "id",
+        "render": function ( data, type, full, meta ) {
+          return '<i class="fa fa-fw fa-times-circle" style="color: #dd4b39; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('+data+',\'Del\')"></i> ' + '<i class="fa fa-fw fa-search" style="color: #3c8dbc; cursor: pointer; margin-left: 15px;" onclick="LoadCtaCte('+ data +',\'View\')"></i>';
+        }
+      },{
+        "targets": 2,
+        "data": "date",
+        "render": function (data) {
+            var date = new Date(data);
+            var month = date.getMonth() + 1;
+            return ("0"+date.getDate()).slice(-2) + "/" + ("0"+(date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear() + " " + ("0"+date.getHours()).slice(-2) + ":" + ("0"+date.getMinutes()).slice(-2);
+        }
+      },{
+        "targets": 1,
+        "data": "code",
+        "render": function (code) {
+            return ("000000000"+code).slice(-8);
+        }
+      }] 
+           
     });
+    */
   });
 
   var idCrd = 0;

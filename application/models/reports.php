@@ -59,7 +59,8 @@ class Reports extends CI_Model
 						$html .= '<tr>';
 						$html .= '<td style="width: 100px">'.str_pad($i->crdId, 10, "0", STR_PAD_LEFT).'</td>';
 						$html .= '<td>'.$i->crdDescription.'</td>';
-						$html .= '<td  style="width: 150px">'.$i->crdDate.'</td>';
+						$fecha = new DateTime($i->crdDate);
+						$html .= '<td  style="width: 150px">'.$fecha->format('d-m-Y H:i').'</td>';
 						$html .= '<td style="text-align: right; width: 100px;">'.$i->crdHaber.'</td>';
 						$html .= '<td>'.$i->cliLastName.', '.$i->cliName.'</td>';
 						$html .= '</tr>';
@@ -141,7 +142,8 @@ class Reports extends CI_Model
 						$html .= '<tr>';
 						$html .= '<td style="width: 100px">'.str_pad($i->crdId, 10, "0", STR_PAD_LEFT).'</td>';
 						$html .= '<td>'.$i->crdDescription.'</td>';
-						$html .= '<td  style="width: 150px">'.$i->crdDate.'</td>';
+						$fecha = new DateTime($i->crdDate);
+						$html .= '<td  style="width: 150px">'.$fecha->format('d-m-Y H:i').'</td>';
 						$html .= '<td style="text-align: right; width: 100px;">'.$i->crdDebe.'</td>';
 						$html .= '<td>'.$i->cliLastName.', '.$i->cliName.'</td>';
 						$html .= '</tr>';
@@ -169,6 +171,100 @@ class Reports extends CI_Model
 			file_put_contents('assets/reports/reporteDeEgresos.pdf', $output);
 
 			return $total;
+		}
+	}
+
+	function reports_List($data = null){
+		$query= $this->db->query('
+									select 
+												* 
+									from (
+													select 
+																	SUM(crdDebe) - SUM(crdHaber) as saldo, 
+																	cr.cliId,
+																	cliName, 
+																	cliLastName,
+																	cliAddress,
+																	MAX(cr.crdDate) as ultima
+													from 
+																	admcredits as cr
+													join 
+															admcustomers on admcustomers.cliId = cr.cliId
+													group by 
+																	cliId
+												) as clientes 
+									where 
+												saldo <= 0
+									order by
+											cliLastName asc,
+											cliName asc
+								');
+
+		$html = '<html>
+				<head>
+				    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+				    <html lang="sv">
+				</head>
+				<body>';
+
+		if ($query->num_rows()!=0)
+		{
+			//******************
+
+			$html .= '<table style="border: 1px solid; width: 100%;">';
+			$html .= '<tr><th>Cliente</th><th>Ultima Visita</th><th>Saldo a Favor</th><th>Domicilio</th></tr>';
+			$html .= '<tr><td colspan="5"><hr></td></tr>';
+			foreach ($query->result() as $i) {
+				$html .= '<tr>';
+				$html .= '<td>'.$i->cliLastName.', '.$i->cliName.'</td>';
+				$fecha = new DateTime($i->ultima);
+				$html .= '<td  style="width: 150px">'.$fecha->format('d-m-Y H:i').'</td>';
+				$html .= '<td style="text-align: right; width: 100px;">'.str_replace('-','',$i->saldo).'</td>';
+				$html .= '<td>'.$i->cliAddress.'</td>';
+				$html .= '</tr>';
+				$html .= '<tr><td colspan="5"><hr></td></tr>';
+			}
+			$html .= '</table></body></html>';
+
+
+			//se incluye la libreria de dompdf
+			require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
+			//se crea una nueva instancia al DOMPDF
+			$dompdf = new DOMPDF();
+			//se carga el codigo html
+			$dompdf->load_html(utf8_decode($html));
+			//aumentamos memoria del servidor si es necesario
+			ini_set("memory_limit","300M"); 
+			//Tamaño de la página y orientación 
+			$dompdf->set_paper('a4', 'landscape');
+			//lanzamos a render
+			$dompdf->render();
+			//guardamos a PDF
+			//$dompdf->stream("TrabajosPedndientes.pdf");
+			$output = $dompdf->output();
+			file_put_contents('assets/reports/clientesAlDia.pdf', $output);
+			//******************
+			return $query->result_array();	
+		}
+		else
+		{	
+			require_once("assets/plugin/HTMLtoPDF/dompdf/dompdf_config.inc.php");
+			//se crea una nueva instancia al DOMPDF
+			$dompdf = new DOMPDF();
+			//se carga el codigo html
+			$dompdf->load_html(utf8_decode($html));
+			//aumentamos memoria del servidor si es necesario
+			ini_set("memory_limit","300M"); 
+			//Tamaño de la página y orientación 
+			$dompdf->set_paper('a4', 'landscape');
+			//lanzamos a render
+			$dompdf->render();
+			//guardamos a PDF
+			//$dompdf->stream("TrabajosPedndientes.pdf");
+			$output = $dompdf->output();
+			file_put_contents('assets/reports/clientesAlDia.pdf', $output);
+
+			return false;
 		}
 	}
 
