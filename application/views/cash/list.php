@@ -147,7 +147,8 @@
                         row += '<td>'+("000000000"+value.crdId).slice(-10)+'</td>';
                         var date = new Date(value.crdDate);
                         //echo date_format($date, 'Y-m-d H:i:s');
-                        row += '<td style="text-align: center">'+("0"+date.getDate()).slice(-2)+'-'+("0"+date.getMonth()).slice(-2)+'-'+("0"+date.getFullYear()).slice(-2)+' '+("0"+date.getHours()).slice(-2)+':'+("0"+date.getMinutes()).slice(-2)+'</td>';
+                        var month = date.getMonth() + 1;
+                        row += '<td style="text-align: center">'+("0"+date.getDate()).slice(-2)+'-'+("0"+ month).slice(-2)+'-'+("0"+date.getFullYear()).slice(-2)+' '+("0"+date.getHours()).slice(-2)+':'+("0"+date.getMinutes()).slice(-2)+'</td>';
                         row += '<td style="text-align: left">'+value.cliLastName+','+value.cliName+'</td>';
                         row += '<td style="text-align: left">'+value.crdDescription+'</td>';
                         row += '<td style="text-align: left">'+value.usrNick+'</td>';
